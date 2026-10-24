@@ -149,6 +149,9 @@ country.name.toUpperCase() + ' WINS!';
 log('🏆 ' + country.name + ' IS THE WINNER!');
 beep(900);
 speakWinner(country);
+ setTimeout(() => {
+  resetGame();
+}, 3000);
 }
 
 function checkWinner() {
