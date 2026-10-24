@@ -22,7 +22,57 @@ h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0
 .bottom{padding:10px 14px;max-width:1200px;margin:auto}.flagstrip{display:flex;gap:8px;overflow-x:auto;padding:10px;border:1px solid #147aff;border-radius:18px;background:#050b22}.mini{font-size:25px;flex:0 0 auto;opacity:.95}.mini.out{opacity:.2;filter:grayscale(1)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.controls input,.controls select,.controls button{min-width:0;padding:12px;border-radius:10px;border:1px solid #00bfff;background:#071331;color:white;font-size:14px}.controls input{flex:1}.controls button{font-weight:bold;cursor:pointer}.controls button:active{transform:scale(.97)}.elim{background:#8e0e32!important;border-color:#ff305f!important}.return{background:#075b43!important;border-color:#19ffab!important}.shield{background:#064e7c!important;border-color:#00dfff!important}
 #log{max-height:260px;overflow:auto;font-size:12px;line-height:1.5}.logline{padding:5px 0;border-bottom:1px solid #17264b}.hint{text-align:center;color:#a9caff;font-size:12px;padding:12px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}#winnerScreen {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 9999;
+background: rgba(2, 4, 20, 0.96);
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 20px;
+}
+
+#winnerScreen.show {
+display: flex;
+animation: winnerFade 0.6s ease;
+}
+
+.winnerBox {
+width: min(700px, 100%);
+padding: 30px 16px;
+border: 3px solid #ffdc26;
+border-radius: 24px;
+background: radial-gradient(circle, #25205e, #070b24);
+box-shadow: 0 0 35px #ffdc26;
+}
+
+#winnerTitle {
+font-size: clamp(30px, 8vw, 64px);
+color: #ffdc26;
+overflow-wrap: anywhere;
+}
+
+#winnerFlag {
+font-size: clamp(55px, 12vw, 90px);
+}
+
+.winnerBox button {
+padding: 14px 22px;
+border: 0;
+border-radius: 12px;
+background: #ffdc26;
+color: #101020;
+font-weight: bold;
+font-size: 16px;
+}
+
+@keyframes winnerFade {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
 </style>
 </head>
 <body>
@@ -44,7 +94,16 @@ h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0
  </section>
  <section class="panel right"><h2>💬 COMMAND LOG</h2><div id="log"><div class="logline">System: Demo ready. Choose a country and try a command.</div></div><div class="hint">This is a local demo. YouTube chat is not connected yet.</div></section>
 </div>
-<div class="bottom"><div class="flagstrip" id="strip"></div><div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo only — not connected to real YouTube Live Chat</div></div>
+<div class="bottom"><div class="flagstrip" id="strip"></div><div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo only — not connected to real YouTube Live Chat</div></div><div id="winnerScreen" role="dialog" aria-modal="true">
+  <div class="winnerBox">
+    <div style="font-size:70px">🏆</div>
+    <div id="winnerFlag">🇮🇳</div>
+    <h2 id="winnerTitle">INDIA IS THE WINNER!</h2>
+    <p id="winnerMessage">Congratulations, champion!</p>
+    <button onclick="resetGame()">🔄 PLAY AGAIN</button>
+  </div>
+</div>
+
 <script>
 const countries=[
 ["United States","🇺🇸"],["China","🇨🇳"],["India","🇮🇳"],["Brazil","🇧🇷"],["Canada","🇨🇦"],["Germany","🇩🇪"],["France","🇫🇷"],["Japan","🇯🇵"],["Australia","🇦🇺"],["Russia","🇷🇺"],["South Korea","🇰🇷"],["Italy","🇮🇹"],["United Kingdom","🇬🇧"],["Mexico","🇲🇽"],["Spain","🇪🇸"],["Turkey","🇹🇷"],["Saudi Arabia","🇸🇦"],["South Africa","🇿🇦"],["Argentina","🇦🇷"],["Norway","🇳🇴"],["Sweden","🇸🇪"],["Finland","🇫🇮"],["Denmark","🇩🇰"],["Netherlands","🇳🇱"],["Belgium","🇧🇪"],["Switzerland","🇨🇭"],["Austria","🇦🇹"],["Poland","🇵🇱"],["Ukraine","🇺🇦"],["Greece","🇬🇷"],["Portugal","🇵🇹"],["Ireland","🇮🇪"],["New Zealand","🇳🇿"],["Indonesia","🇮🇩"],["Pakistan","🇵🇰"],["Bangladesh","🇧🇩"],["Nepal","🇳🇵"],["Sri Lanka","🇱🇰"],["Thailand","🇹🇭"],["Vietnam","🇻🇳"],["Philippines","🇵🇭"],["Malaysia","🇲🇾"],["Singapore","🇸🇬"],["Egypt","🇪🇬"],["Nigeria","🇳🇬"],["Kenya","🇰🇪"],["Morocco","🇲🇦"],["Algeria","🇩🇿"],["Israel","🇮🇱"],["United Arab Emirates","🇦🇪"],["Qatar","🇶🇦"],["Iran","🇮🇷"],["Iraq","🇮🇶"],["Chile","🇨🇱"],["Colombia","🇨🇴"],["Peru","🇵🇪"],["Venezuela","🇻🇪"],["Cuba","🇨🇺"],["Jamaica","🇯🇲"],["Iceland","🇮🇸"],["Romania","🇷🇴"],["Czechia","🇨🇿"],["Hungary","🇭🇺"],["Croatia","🇭🇷"]
@@ -55,16 +114,112 @@ let el=document.createElement('div');el.className='flag';el.textContent=c.flag;e
 let mini=document.createElement('span');mini.className='mini';mini.textContent=c.flag;mini.id='mini'+i;mini.title=c.name;strip.appendChild(mini);
 });
 function update(){let now=Date.now(),remaining=0,shields=0;countries.forEach(c=>{if(!c.out)remaining++;if(c.shieldUntil>now)shields++;let el=document.getElementById('flag'+c.id),mi=document.getElementById('mini'+c.id);el.classList.toggle('out',c.out);el.classList.toggle('shielded',c.shieldUntil>now);mi.classList.toggle('out',c.out)});document.getElementById('remaining').textContent=remaining;document.getElementById('shields').textContent=shields;document.getElementById('count').textContent=countries.length;}
-function log(msg){let l=document.createElement('div');l.className='logline';l.textContent=new Date().toLocaleTimeString()+' — '+msg;document.getElementById('log').prepend(l)}
+function log(msg){let l=document.createElement('div');l.className='logline';l.textContent=new Date().toLocaleTimeString()+' — '+msg;document.getElementById('log').prepend(l)}let gameOver = false;
+
+function speakWinner(country) {
+if (!('speechSynthesis' in window)) return;
+
+window.speechSynthesis.cancel();
+
+const voice = new SpeechSynthesisUtterance(
+country.name + ' is the winner!'
+);
+
+voice.lang = 'en-US';
+voice.rate = 0.9;
+voice.pitch = 1;
+
+window.speechSynthesis.speak(voice);
+}
+
+function showWinner(country) {
+gameOver = true;
+
+document.getElementById('winnerFlag').textContent = country.flag;
+document.getElementById('winnerTitle').textContent =
+country.name.toUpperCase() + ' IS THE WINNER!';
+
+document.getElementById('winnerMessage').textContent =
+'Congratulations, ' + country.name + '!';
+
+document.getElementById('winnerScreen').classList.add('show');
+document.getElementById('status').textContent =
+country.name.toUpperCase() + ' WINS!';
+
+log('🏆 ' + country.name + ' IS THE WINNER!');
+beep(900);
+speakWinner(country);
+}
+
+function checkWinner() {
+const active = countries.filter(country => !country.out);
+
+if (active.length === 1 && !gameOver) {
+showWinner(active[0]);
+}
+
+if (active.length === 0 && !gameOver) {
+gameOver = true;
+
+```
+document.getElementById('winnerFlag').textContent = '⚔️';
+document.getElementById('winnerTitle').textContent = 'NO WINNER!';
+document.getElementById('winnerMessage').textContent =
+  'All countries have been eliminated.';
+
+document.getElementById('winnerScreen').classList.add('show');
+log('Draw: all countries eliminated.');
+```
+
+}
+
+if (active.length > 1 && gameOver) {
+gameOver = false;
+document.getElementById('winnerScreen').classList.remove('show');
+
+```
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.cancel();
+}
+```
+
+}
+}
+
 function beep(freq=600){try{let ctx=new(window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);g.gain.value=.06;o.start();o.stop(ctx.currentTime+.12)}catch(e){}}
 function act(action){let c=countries.find(c=>c.name===select.value);if(!c)return;let now=Date.now();
 if(action==='eliminate'){if(c.shieldUntil>now){document.getElementById('status').textContent=c.name+' SHIELDED!';log(c.name+' was protected by shield.');beep(250);return}if(c.out){log(c.name+' is already eliminated.');return}c.out=true;document.getElementById('lastOut').textContent=c.flag+' '+c.name.toUpperCase();document.getElementById('status').textContent=c.name.toUpperCase()+' ELIMINATED';log('⚔️ Eliminated '+c.name);beep(180)}
 if(action==='return'){if(!c.out){log(c.name+' is already in the arena.');return}c.out=false;document.getElementById('status').textContent=c.name.toUpperCase()+' RETURNED';log('🔄 Returned '+c.name);beep(750)}
 if(action==='shield'){c.shieldUntil=now+30000;document.getElementById('status').textContent=c.name.toUpperCase()+' SHIELDED · 30s';log('🛡️ Shield activated for '+c.name+' (30 seconds)');beep(900)}
-update()}
+update();
+checkWinner();
+}
 function runCommand(){let v=document.getElementById('command').value.trim();if(!v)return;let m=v.match(/^(eliminate|return|shield)\s+(.+)$/i);if(!m){log('Unknown command. Use: Eliminate India / Return USA / Shield Japan');return}let action=m[1].toLowerCase(),name=m[2].trim().toLowerCase();let c=countries.find(c=>c.name.toLowerCase()===name|| (name==='usa'&&c.name==='United States')||(name==='uk'&&c.name==='United Kingdom'));if(!c){log('Country not found: '+m[2]);return}select.value=c.name;act(action);document.getElementById('command').value=''}
 document.getElementById('command').addEventListener('keydown',e=>{if(e.key==='Enter')runCommand()});
-function resetGame(){physicsReady=false;countries.forEach(c=>{c.out=false;c.shieldUntil=0});document.getElementById('lastOut').textContent='NONE YET';document.getElementById('status').textContent='ARENA RESET';document.getElementById('log').innerHTML='';log('Game reset. All flags returned.');update()}
+function resetGame() {
+gameOver = false;
+
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+}
+
+document.getElementById('winnerScreen').classList.remove('show');
+
+physicsReady = false;
+
+countries.forEach(c => {
+c.out = false;
+c.shieldUntil = 0;
+});
+
+document.getElementById('lastOut').textContent = 'NONE YET';
+document.getElementById('status').textContent = 'ARENA RESET';
+document.getElementById('log').innerHTML = '';
+
+log('Game reset. All flags returned.');
+update();
+}
+
 
 // Bouncing-ball movement: flags travel around the arena and bounce off walls/each other.
 let physicsReady=false, lastFrame=0;
