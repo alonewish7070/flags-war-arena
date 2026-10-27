@@ -9,26 +9,24 @@
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at center,#19116c 0%,#060b27 58%,#02040d 100%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
 header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;flex-wrap:wrap;background:linear-gradient(90deg,#07101e,#111a35,#07101e);border-bottom:1px solid #1b5a8b}
 .live{background:#ff123c;padding:9px 13px;border-radius:10px;font-weight:900;box-shadow:0 0 18px #ff123c;animation:pulseLive 1.6s infinite}@keyframes pulseLive{50%{box-shadow:0 0 5px #ff123c}}.stat{border:1px solid #256aff;border-radius:12px;padding:8px 12px;background:#070c26;font-weight:bold}
-h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0 16px;text-shadow:0 0 15px #00cfff}h1 span{color:var(--gold)}
-.layout{display:grid;grid-template-columns:minmax(150px,1fr) minmax(260px,2fr) minmax(180px,1fr);gap:12px;padding:12px;max-width:1400px;margin:auto}
-.panel{background:linear-gradient(145deg,#080d2d,#120b38);border:2px solid #7c25ff;border-radius:18px;padding:13px;box-shadow:0 0 15px #3a14a0}
-.panel h2{font-size:16px;color:var(--cyan);margin:0 0 10px}.cmd{padding:10px;border-radius:10px;margin:8px 0;background:#0b1640;font-size:13px;line-height:1.5}.cmd b{display:block;font-size:15px}.red{color:#ff3e60}.green{color:#29ff9c}.cyan{color:var(--cyan)}
-.arena{aspect-ratio:1;border:7px solid var(--cyan);border-radius:50%;position:relative;max-width:760px;width:100%;margin:auto;background:radial-gradient(circle at 50% 50%,#28205f 0 13%,#101b3b 14% 65%,#071127 100%);box-shadow:0 0 22px var(--cyan),inset 0 0 40px #203fff;overflow:hidden}
+h1{text-align:center;font-size:clamp(22px,4vw,40px);line-height:.95;margin:6px 0 12px;text-shadow:0 0 15px #00cfff}h1 span{color:var(--gold)}
+.layout{display:grid;grid-template-columns:1fr;gap:12px;padding:12px;max-width:900px;margin:auto}
+.arena{aspect-ratio:1;border:7px solid var(--cyan);border-radius:50%;position:relative;max-width:640px;width:100%;margin:auto;background:radial-gradient(circle at 50% 50%,#28205f 0 13%,#101b3b 14% 65%,#071127 100%);box-shadow:0 0 22px var(--cyan),inset 0 0 40px #203fff;overflow:hidden}
 .arena:before{content:"";position:absolute;inset:5%;border:2px dashed #35caff;border-radius:50%;opacity:.7;pointer-events:none}
 .obstacle-container{position:absolute;inset:0;pointer-events:none;transform-origin:center;will-change:transform;}
 .obstacle{position:absolute;width:24%;height:2.4%;min-height:9px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);box-shadow:0 0 12px #967cff;left:50%;top:50%;transform-origin:center;pointer-events:none;opacity:.92}
 .core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:radial-gradient(circle,#22265e,#17164b);box-shadow:0 0 18px #ffcf36;pointer-events:none;z-index:1}
-.core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,44px)}
-.flag{z-index:2;position:absolute;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);will-change:left,top;transition:transform 0.5s ease-out;}
-.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 10px #ff2c66;transform:translate(-50%,-50%) scale(0.7);}
+.core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,40px)}
+.flag{z-index:2;position:absolute;width:clamp(28px,4.5vw,46px);height:clamp(28px,4.5vw,46px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(18px,2.5vw,28px);transform:translate(-50%,-50%);will-change:left,top;}
+.flag.out{opacity:.12;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 8px #ff2c66;transform:translate(-50%,-50%) scale(0.6);pointer-events:none;}
 .flag.shielded{border-color:#00ffbd;box-shadow:0 0 20px #00ffbd,0 0 6px white}
-.flag.shielded:after{content:"🛡️";position:absolute;font-size:14px;right:-9px;top:-9px}
 .centerLabel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-align:center;text-shadow:0 0 10px red;font-weight:bold;pointer-events:none;z-index:3}
-.notice{border:2px solid var(--pink);border-radius:15px;padding:10px;margin-top:12px;text-align:center;box-shadow:0 0 15px #a500b8}.notice strong{color:#ff5de6;display:block;font-size:12px}.notice div{font-size:20px;font-weight:900}
-.bottom{padding:10px 14px;max-width:1200px;margin:auto}.flagstrip{display:flex;gap:8px;overflow-x:auto;padding:10px;border:1px solid #147aff;border-radius:18px;background:#050b22}.mini{font-size:25px;flex:0 0 auto;opacity:.95}.mini.out{opacity:.2;filter:grayscale(1)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.controls input,.controls select,.controls button{min-width:0;padding:12px;border-radius:10px;border:1px solid #00bfff;background:#071331;color:white;font-size:14px}.controls input{flex:1}.controls button{font-weight:bold;cursor:pointer}.controls button:active{transform:scale(.97)}.elim{background:#8e0e32!important;border-color:#ff305f!important}.return{background:#075b43!important;border-color:#19ffab!important}.shield{background:#064e7c!important;border-color:#00dfff!important}
-#log{max-height:260px;overflow:auto;font-size:12px;line-height:1.5}.logline{padding:5px 0;border-bottom:1px solid #17264b}.hint{text-align:center;color:#a9caff;font-size:12px;padding:12px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}
+.notice{border:2px solid var(--pink);border-radius:15px;padding:8px;text-align:center;box-shadow:0 0 15px #a500b8;background:#0d0826}
+.notice strong{color:#ff5de6;display:block;font-size:11px}
+.notice div{font-size:18px;font-weight:900}
+.bottom{padding:10px 14px;max-width:1000px;margin:auto}
+.flagstrip{display:flex;gap:8px;overflow-x:auto;padding:8px;border:1px solid #147aff;border-radius:14px;background:#050b22}
+.mini{font-size:22px;flex:0 0 auto;opacity:.95}.mini.out{opacity:.2;filter:grayscale(1)}
 #winnerScreen {
 display: none;
 position: fixed;
@@ -78,22 +76,13 @@ to { opacity: 1; }
 </head>
 <body>
 <header>
-  <div class="live">● LIVE (<span id="fpsDisplay">--</span> FPS)</div>
-  <div class="stat">COUNTRIES <span id="count">64</span></div>
-  <div class="stat">REMAINING <span id="remaining">64</span></div>
-  <div class="stat">SHIELDS <span id="shields">0</span></div>
+  <div class="live">● LIVE (<span id="fpsDisplay">--</span> FPS)[cite: 3]</div>
+  <div class="stat">COUNTRIES <span id="count">64</span>[cite: 3]</div>
+  <div class="stat">REMAINING <span id="remaining">64</span>[cite: 3]</div>
+  <div class="stat">SHIELDS <span id="shields">0</span>[cite: 3]</div>
 </header>
-<h1>FLAGS WAR<br><span>ARENA ⚔️</span></h1>
+<h1>WHERE ARE YOU FROM? <br><span>FLAGS WAR ARENA ⚔️</span></h1>
 <div class="layout">
- <section class="panel left">
-  <h2>🏆 GAME COMMANDS</h2>
-  <div class="cmd"><b class="red">⚔️ Eliminate [Country]</b>Remove the flag</div>
-  <div class="cmd"><b class="green">🔄 Return [Country]</b>Bring the flag back</div>
-  <div class="cmd"><b class="cyan">🛡️ Shield [Country]</b>Protect for 30 seconds</div>
-  <h2 style="margin-top:16px">TRY A COMMAND</h2>
-  <div class="cmd">Examples:<br><b>Eliminate India</b><b>Return USA</b><b>Shield Japan</b></div>
-  <div class="notice"><strong>LAST ELIMINATED</strong><div id="lastOut">NONE YET</div></div>
- </section>
  <section class="center">
   <div class="arena" id="arena">
    <div class="core"></div>
@@ -107,19 +96,14 @@ to { opacity: 1; }
    </div>
    <div class="centerLabel">LIVE<br>ARENA</div>
   </div>
-  <div class="notice"><strong>NEXT ACTION / STATUS</strong><div id="status">ARENA READY</div></div>
-  <div class="controls"><select id="country"></select><button class="elim" onclick="act('eliminate')">⚔️ Eliminate</button><button class="return" onclick="act('return')">🔄 Return</button><button class="shield" onclick="act('shield')">🛡️ Shield 30s</button></div>
-  <div class="controls"><input id="command" placeholder="Try: Eliminate India" autocomplete="off"><button onclick="runCommand()">RUN COMMAND</button><button onclick="resetGame()">RESET</button></div>
- </section>
- <section class="panel right">
-  <h2>💬 COMMAND LOG</h2>
-  <div id="log"><div class="logline">System: Demo ready. Choose a country and try a command.</div></div>
-  <div class="hint">Optimized physics engine running at high frame rate.</div>
+  <div class="notice" style="margin-top:10px;">
+    <strong>AUTO ELIMINATION STATUS</strong>
+    <div id="status">ARENA LIVE — ELIMINATING EVERY 5s</div>
+  </div>
  </section>
 </div>
 <div class="bottom">
   <div class="flagstrip" id="strip"></div>
-  <div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Flags War Arena Optimized</div>
 </div>
 <div id="winnerScreen" role="dialog" aria-modal="true">
   <div class="winnerBox">
@@ -137,25 +121,19 @@ const countries = [
 ].map(([name,flag],i)=>({name,flag,out:false,shieldUntil:0,x:0,y:0,vx:0,vy:0,id:i}));
 
 const arena = document.getElementById('arena');
-const select = document.getElementById('country');
 const strip = document.getElementById('strip');
 const obstacleContainer = document.getElementById('obstacleContainer');
 
 const obstacleDefs = [
-  {angle: 22 * Math.PI/180, distY: -145, distX: 0, width: 0.24, height: 20},
-  {angle: -42 * Math.PI/180, distY: -118, distX: 0, width: 0.24, height: 20},
-  {angle: 8 * Math.PI/180, distY: 145, distX: 0, width: 0.24, height: 20},
-  {angle: 48 * Math.PI/180, distY: 110, distX: 0, width: 0.24, height: 20},
-  {angle: -18 * Math.PI/180, distY: 0, distX: -150, width: 0.24, height: 20},
-  {angle: 18 * Math.PI/180, distY: 0, distX: 150, width: 0.24, height: 20}
+  {angle: 22 * Math.PI/180, distY: -145, distX: 0, width: 0.24},
+  {angle: -42 * Math.PI/180, distY: -118, distX: 0, width: 0.24},
+  {angle: 8 * Math.PI/180, distY: 145, distX: 0, width: 0.24},
+  {angle: 48 * Math.PI/180, distY: 110, distX: 0, width: 0.24},
+  {angle: -18 * Math.PI/180, distY: 0, distX: -150, width: 0.24},
+  {angle: 18 * Math.PI/180, distY: 0, distX: 150, width: 0.24}
 ];
 
 countries.forEach((c, i) => {
-  let opt = document.createElement('option');
-  opt.value = c.name;
-  opt.textContent = c.flag + ' ' + c.name;
-  select.appendChild(opt);
-
   let el = document.createElement('div');
   el.className = 'flag';
   el.textContent = c.flag;
@@ -172,26 +150,17 @@ countries.forEach((c, i) => {
 });
 
 function updateStats() {
-  let now = Date.now(), remaining = 0, shields = 0;
+  let remaining = 0, shields = 0;
   countries.forEach(c => {
     if (!c.out) remaining++;
-    if (c.shieldUntil > now) shields++;
     let el = document.getElementById('flag' + c.id);
     let mi = document.getElementById('mini' + c.id);
     el.classList.toggle('out', c.out);
-    el.classList.toggle('shielded', c.shieldUntil > now);
     mi.classList.toggle('out', c.out);
   });
   document.getElementById('remaining').textContent = remaining;
   document.getElementById('shields').textContent = shields;
   document.getElementById('count').textContent = countries.length;
-}
-
-function log(msg) {
-  let l = document.createElement('div');
-  l.className = 'logline';
-  l.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
-  document.getElementById('log').prepend(l);
 }
 
 let gameOver = false;
@@ -213,8 +182,6 @@ function showWinner(country) {
   document.getElementById('winnerMessage').textContent = 'Congratulations, ' + country.name + '!';
   document.getElementById('winnerScreen').classList.add('show');
   document.getElementById('status').textContent = country.name.toUpperCase() + ' WINS!';
-  log('🏆 ' + country.name + ' IS THE WINNER!');
-  beep(900);
   speakWinner(country);
 }
 
@@ -223,91 +190,20 @@ function checkWinner() {
   if (active.length === 1 && !gameOver) {
     showWinner(active[0]);
   }
-  if (active.length === 0 && !gameOver) {
-    gameOver = true;
-    document.getElementById('winnerFlag').textContent = '⚔️';
-    document.getElementById('winnerTitle').textContent = 'NO WINNER!';
-    document.getElementById('winnerMessage').textContent = 'All countries have been eliminated.';
-    document.getElementById('winnerScreen').classList.add('show');
-    log('Draw: all countries eliminated.');
-  }
 }
 
-function beep(freq = 600) {
-  try {
-    let ctx = new (window.AudioContext || window.webkitAudioContext)(),
-        o = ctx.createOscillator(),
-        g = ctx.createGain();
-    o.frequency.value = freq;
-    o.connect(g);
-    g.connect(ctx.destination);
-    g.gain.value = .06;
-    o.start();
-    o.stop(ctx.currentTime + .12);
-  } catch (e) {}
-}
-
-function act(action) {
-  let c = countries.find(c => c.name === select.value);
-  if (!c) return;
-  let now = Date.now();
-  if (action === 'eliminate') {
-    if (c.shieldUntil > now) {
-      document.getElementById('status').textContent = c.name + ' SHIELDED!';
-      log(c.name + ' was protected by shield.');
-      beep(250);
-      return;
-    }
-    if (c.out) {
-      log(c.name + ' is already eliminated.');
-      return;
-    }
-    c.out = true;
-    document.getElementById('lastOut').textContent = c.flag + ' ' + c.name.toUpperCase();
-    document.getElementById('status').textContent = c.name.toUpperCase() + ' ELIMINATED';
-    log('⚔️ Eliminated ' + c.name);
-    beep(180);
+// Automatic Elimination every 5 seconds
+setInterval(() => {
+  if (gameOver) return;
+  const active = countries.filter(c => !c.out);
+  if (active.length > 1) {
+    const victim = active[Math.floor(Math.random() * active.length)];
+    victim.out = true;
+    document.getElementById('status').textContent = victim.flag + ' ' + victim.name.toUpperCase() + ' ELIMINATED';
+    updateStats();
+    checkWinner();
   }
-  if (action === 'return') {
-    if (!c.out) {
-      log(c.name + ' is already in the arena.');
-      return;
-    }
-    c.out = false;
-    document.getElementById('status').textContent = c.name.toUpperCase() + ' RETURNED';
-    log('🔄 Returned ' + c.name);
-    beep(750);
-  }
-  if (action === 'shield') {
-    c.shieldUntil = now + 30000;
-    document.getElementById('status').textContent = c.name.toUpperCase() + ' SHIELDED · 30s';
-    log('🛡️ Shield activated for ' + c.name + ' (30 seconds)');
-    beep(900);
-  }
-  updateStats();
-  checkWinner();
-}
-
-function runCommand() {
-  let v = document.getElementById('command').value.trim();
-  if (!v) return;
-  let m = v.match(/^(eliminate|return|shield)\s+(.+)$/i);
-  if (!m) {
-    log('Unknown command. Use: Eliminate India / Return USA / Shield Japan');
-    return;
-  }
-  let action = m[1].toLowerCase(), name = m[2].trim().toLowerCase();
-  let c = countries.find(c => c.name.toLowerCase() === name || (name === 'usa' && c.name === 'United States') || (name === 'uk' && c.name === 'United Kingdom'));
-  if (!c) {
-    log('Country not found: ' + m[2]);
-    return;
-  }
-  select.value = c.name;
-  act(action);
-  document.getElementById('command').value = '';
-}
-
-document.getElementById('command').addEventListener('keydown', e => { if (e.key === 'Enter') runCommand(); });
+}, 5000);
 
 function resetGame() {
   gameOver = false;
@@ -318,10 +214,7 @@ function resetGame() {
     c.out = false;
     c.shieldUntil = 0;
   });
-  document.getElementById('lastOut').textContent = 'NONE YET';
-  document.getElementById('status').textContent = 'ARENA RESET';
-  document.getElementById('log').innerHTML = '';
-  log('Game reset. All flags returned.');
+  document.getElementById('status').textContent = 'ARENA LIVE — ELIMINATING EVERY 5s';
   updateStats();
 }
 
@@ -346,17 +239,17 @@ function animateArena(ts) {
   const cy = arenaHeight / 2;
   const size = Math.min(arenaWidth, arenaHeight);
   const border = size * 0.42;
-  const flagRadius = Math.max(18, arenaWidth * 0.03);
+  const flagRadius = Math.max(16, arenaWidth * 0.026);
 
   const active = countries.filter(c => !c.out);
 
   if (!physicsReady && arenaWidth > 0) {
     active.forEach((c, idx) => {
       const angle = (idx / active.length) * Math.PI * 2;
-      const r = (0.2 + Math.random() * 0.5) * border;
+      const r = (0.15 + Math.random() * 0.6) * border;
       c.x = cx + Math.cos(angle) * r;
       c.y = cy + Math.sin(angle) * r;
-      const speed = 2.2 + Math.random() * 1.8;
+      const speed = 2.5 + Math.random() * 2.0;
       let a = Math.random() * Math.PI * 2;
       c.vx = Math.cos(a) * speed;
       c.vy = Math.sin(a) * speed;
@@ -367,11 +260,11 @@ function animateArena(ts) {
   const dt = Math.min((ts - lastFrame) / 16.67, 2);
   lastFrame = ts;
 
-  globalObstacleAngle += 0.004 * dt;
+  globalObstacleAngle += 0.005 * dt;
   obstacleContainer.style.transform = `rotate(${globalObstacleAngle}rad)`;
 
   if (physicsReady) {
-    // Ball-to-ball collisions with stronger separation to prevent sticking
+    // Fast collision resolution
     for (let iter = 0; iter < 2; iter++) {
       for (let i = 0; i < active.length; i++) {
         for (let j = i + 1; j < active.length; j++) {
@@ -379,7 +272,7 @@ function animateArena(ts) {
           let dx = b.x - a.x;
           let dy = b.y - a.y;
           let d = Math.hypot(dx, dy) || 0.01;
-          let minDist = flagRadius * 2.1;
+          let minDist = flagRadius * 2.05;
 
           if (d < minDist) {
             let nx = dx / d;
@@ -396,17 +289,16 @@ function animateArena(ts) {
             let p = (nx * kx + ny * ky);
 
             if (p > 0) {
-              a.vx -= p * nx * 1.1;
-              a.vy -= p * ny * 1.1;
-              b.vx += p * nx * 1.1;
-              b.vy += p * ny * 1.1;
+              a.vx -= p * nx * 1.2;
+              a.vy -= p * ny * 1.2;
+              b.vx += p * nx * 1.2;
+              b.vy += p * ny * 1.2;
             }
           }
         }
       }
     }
 
-    // Movement and boundary bounce
     active.forEach(c => {
       c.x += c.vx * dt;
       c.y += c.vy * dt;
@@ -421,14 +313,13 @@ function animateArena(ts) {
         c.x = cx + nx * (border - flagRadius);
         c.y = cy + ny * (border - flagRadius);
         let dot = c.vx * nx + c.vy * ny;
-        c.vx -= 2.1 * dot * nx;
-        c.vy -= 2.1 * dot * ny;
+        c.vx -= 2.2 * dot * nx;
+        c.vy -= 2.2 * dot * ny;
       }
     });
 
-    // Obstacle collision
     active.forEach(c => {
-      const coreRadius = arenaWidth * 0.16;
+      const coreRadius = arenaWidth * 0.15;
       let cdx = c.x - cx, cdy = c.y - cy, cdist = Math.hypot(cdx, cdy);
       if (cdist < coreRadius + flagRadius) {
         let nx = cdx / cdist, ny = cdy / cdist;
@@ -462,7 +353,7 @@ function animateArena(ts) {
         let dx = c.x - qx;
         let dy = c.y - qy;
         let d = Math.hypot(dx, dy) || 0.01;
-        let minAllowed = flagRadius + 8;
+        let minAllowed = flagRadius + 6;
 
         if (d < minAllowed) {
           let nx = dx / d;
@@ -481,7 +372,7 @@ function animateArena(ts) {
 
   countries.forEach(c => {
     let el = document.getElementById('flag' + c.id);
-    if (!c.out && Number.isFinite(c.x)) {
+    if (Number.isFinite(c.x)) {
       el.style.left = c.x + 'px';
       el.style.top = c.y + 'px';
     }
@@ -491,7 +382,6 @@ function animateArena(ts) {
 }
 
 requestAnimationFrame(animateArena);
-setInterval(updateStats, 500);
 updateStats();
 </script>
 </body>
