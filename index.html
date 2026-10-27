@@ -19,8 +19,8 @@ h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0
 .obstacle{position:absolute;width:24%;height:2.4%;min-height:9px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);box-shadow:0 0 12px #967cff;left:50%;top:50%;transform-origin:center;pointer-events:none;opacity:.92}
 .core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:radial-gradient(circle,#22265e,#17164b);box-shadow:0 0 18px #ffcf36;pointer-events:none;z-index:1}
 .core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,44px)}
-.flag{z-index:2;position:absolute;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);will-change:left,top;}
-.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 10px #ff2c66}
+.flag{z-index:2;position:absolute;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);will-change:left,top;transition:transform 0.5s ease-out;}
+.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 10px #ff2c66;transform:translate(-50%,-50%) scale(0.7);}
 .flag.shielded{border-color:#00ffbd;box-shadow:0 0 20px #00ffbd,0 0 6px white}
 .flag.shielded:after{content:"🛡️";position:absolute;font-size:14px;right:-9px;top:-9px}
 .centerLabel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-align:center;text-shadow:0 0 10px red;font-weight:bold;pointer-events:none;z-index:3}
@@ -141,7 +141,6 @@ const select = document.getElementById('country');
 const strip = document.getElementById('strip');
 const obstacleContainer = document.getElementById('obstacleContainer');
 
-// Pre-parse obstacle structural data for collision without DOM queries during loop
 const obstacleDefs = [
   {angle: 22 * Math.PI/180, distY: -145, distX: 0, width: 0.24, height: 20},
   {angle: -42 * Math.PI/180, distY: -118, distX: 0, width: 0.24, height: 20},
@@ -326,7 +325,6 @@ function resetGame() {
   updateStats();
 }
 
-// Optimized Physics & Animation Loop
 let physicsReady = false;
 let lastFrame = performance.now();
 let frameCount = 0;
@@ -334,7 +332,6 @@ let lastFpsUpdate = performance.now();
 let globalObstacleAngle = 0;
 
 function animateArena(ts) {
-  // Measure FPS accurately
   frameCount++;
   if (ts - lastFpsUpdate >= 1000) {
     let currentFps = Math.round((frameCount * 1000) / (ts - lastFpsUpdate));
@@ -348,18 +345,18 @@ function animateArena(ts) {
   const cx = arenaWidth / 2;
   const cy = arenaHeight / 2;
   const size = Math.min(arenaWidth, arenaHeight);
-  const border = size * 0.44;
-  const flagRadius = Math.max(16, arenaWidth * 0.027);
+  const border = size * 0.42;
+  const flagRadius = Math.max(18, arenaWidth * 0.03);
 
   const active = countries.filter(c => !c.out);
 
   if (!physicsReady && arenaWidth > 0) {
     active.forEach((c, idx) => {
       const angle = (idx / active.length) * Math.PI * 2;
-      const r = Math.random() * border * 0.6;
+      const r = (0.2 + Math.random() * 0.5) * border;
       c.x = cx + Math.cos(angle) * r;
       c.y = cy + Math.sin(angle) * r;
-      const speed = 1.5 + Math.random() * 1.5;
+      const speed = 2.2 + Math.random() * 1.8;
       let a = Math.random() * Math.PI * 2;
       c.vx = Math.cos(a) * speed;
       c.vy = Math.sin(a) * speed;
@@ -370,12 +367,46 @@ function animateArena(ts) {
   const dt = Math.min((ts - lastFrame) / 16.67, 2);
   lastFrame = ts;
 
-  // Rotate obstacle container smoothly
-  globalObstacleAngle += 0.003 * dt;
+  globalObstacleAngle += 0.004 * dt;
   obstacleContainer.style.transform = `rotate(${globalObstacleAngle}rad)`;
 
   if (physicsReady) {
-    // 1. Move and bounce off outer boundary
+    // Ball-to-ball collisions with stronger separation to prevent sticking
+    for (let iter = 0; iter < 2; iter++) {
+      for (let i = 0; i < active.length; i++) {
+        for (let j = i + 1; j < active.length; j++) {
+          let a = active[i], b = active[j];
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          let d = Math.hypot(dx, dy) || 0.01;
+          let minDist = flagRadius * 2.1;
+
+          if (d < minDist) {
+            let nx = dx / d;
+            let ny = dy / d;
+            let overlap = (minDist - d) * 0.5;
+
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            b.x += nx * overlap;
+            b.y += ny * overlap;
+
+            let kx = a.vx - b.vx;
+            let ky = a.vy - b.vy;
+            let p = (nx * kx + ny * ky);
+
+            if (p > 0) {
+              a.vx -= p * nx * 1.1;
+              a.vy -= p * ny * 1.1;
+              b.vx += p * nx * 1.1;
+              b.vy += p * ny * 1.1;
+            }
+          }
+        }
+      }
+    }
+
+    // Movement and boundary bounce
     active.forEach(c => {
       c.x += c.vx * dt;
       c.y += c.vy * dt;
@@ -390,20 +421,28 @@ function animateArena(ts) {
         c.x = cx + nx * (border - flagRadius);
         c.y = cy + ny * (border - flagRadius);
         let dot = c.vx * nx + c.vy * ny;
-        c.vx -= 2 * dot * nx;
-        c.vy -= 2 * dot * ny;
+        c.vx -= 2.1 * dot * nx;
+        c.vy -= 2.1 * dot * ny;
       }
     });
 
-    // 2. Obstacle collision (using rotated analytical coordinates)
+    // Obstacle collision
     active.forEach(c => {
+      const coreRadius = arenaWidth * 0.16;
+      let cdx = c.x - cx, cdy = c.y - cy, cdist = Math.hypot(cdx, cdy);
+      if (cdist < coreRadius + flagRadius) {
+        let nx = cdx / cdist, ny = cdy / cdist;
+        c.x = cx + nx * (coreRadius + flagRadius);
+        c.y = cy + ny * (coreRadius + flagRadius);
+        let dot = c.vx * nx + c.vy * ny;
+        if (dot < 0) { c.vx -= 2 * dot * nx; c.vy -= 2 * dot * ny; }
+      }
+
       obstacleDefs.forEach(ob => {
-        // Rotate obstacle position by globalObstacleAngle
         let localAngle = ob.angle + globalObstacleAngle;
         let obX = cx + ob.distX * Math.cos(globalObstacleAngle) - ob.distY * Math.sin(globalObstacleAngle);
         let obY = cy + ob.distX * Math.sin(globalObstacleAngle) + ob.distY * Math.cos(globalObstacleAngle);
 
-        // Approximate obstacle as a line segment
         let len = arenaWidth * ob.width;
         let ux = Math.cos(localAngle);
         let uy = Math.sin(localAngle);
@@ -423,7 +462,7 @@ function animateArena(ts) {
         let dx = c.x - qx;
         let dy = c.y - qy;
         let d = Math.hypot(dx, dy) || 0.01;
-        let minAllowed = flagRadius + 6;
+        let minAllowed = flagRadius + 8;
 
         if (d < minAllowed) {
           let nx = dx / d;
@@ -432,48 +471,14 @@ function animateArena(ts) {
           c.y = qy + ny * minAllowed;
           let dot = c.vx * nx + c.vy * ny;
           if (dot < 0) {
-            c.vx -= 1.8 * dot * nx;
-            c.vy -= 1.8 * dot * ny;
+            c.vx -= 2.2 * dot * nx;
+            c.vy -= 2.2 * dot * ny;
           }
         }
       });
     });
-
-    // 3. Ball-to-ball collisions
-    for (let i = 0; i < active.length; i++) {
-      for (let j = i + 1; j < active.length; j++) {
-        let a = active[i], b = active[j];
-        let dx = b.x - a.x;
-        let dy = b.y - a.y;
-        let d = Math.hypot(dx, dy) || 0.01;
-        let minDist = flagRadius * 2;
-
-        if (d < minDist) {
-          let nx = dx / d;
-          let ny = dy / d;
-          let overlap = (minDist - d) / 2;
-
-          a.x -= nx * overlap;
-          a.y -= ny * overlap;
-          b.x += nx * overlap;
-          b.y += ny * overlap;
-
-          let kx = a.vx - b.vx;
-          let ky = a.vy - b.vy;
-          let p = 2 * (nx * kx + ny * ky) / 2;
-
-          if (p > 0) {
-            a.vx -= p * nx;
-            a.vy -= p * ny;
-            b.vx += p * nx;
-            b.vy += p * ny;
-          }
-        }
-      }
-    }
   }
 
-  // Render positions to DOM
   countries.forEach(c => {
     let el = document.getElementById('flag' + c.id);
     if (!c.out && Number.isFinite(c.x)) {
