@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Flags War Arena — Demo</title>
+<title>Flags War Arena</title>
 <style>
 :root{--cyan:#00eaff;--pink:#ff20d4;--blue:#1720a8;--panel:#050d2b;--gold:#ffdc26}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at center,#19116c 0%,#060b27 58%,#02040d 100%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
@@ -14,15 +14,22 @@ h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0
 .panel{background:linear-gradient(145deg,#080d2d,#120b38);border:2px solid #7c25ff;border-radius:18px;padding:13px;box-shadow:0 0 15px #3a14a0}
 .panel h2{font-size:16px;color:var(--cyan);margin:0 0 10px}.cmd{padding:10px;border-radius:10px;margin:8px 0;background:#0b1640;font-size:13px;line-height:1.5}.cmd b{display:block;font-size:15px}.red{color:#ff3e60}.green{color:#29ff9c}.cyan{color:var(--cyan)}
 .arena{aspect-ratio:1;border:7px solid var(--cyan);border-radius:50%;position:relative;max-width:760px;width:100%;margin:auto;background:radial-gradient(circle at 50% 50%,#28205f 0 13%,#101b3b 14% 65%,#071127 100%);box-shadow:0 0 22px var(--cyan),inset 0 0 40px #203fff;overflow:hidden}
-.arena:before{content:"";position:absolute;inset:5%;border:2px dashed #35caff;border-radius:50%;opacity:.7;pointer-events:none}.obstacle{position:absolute;width:24%;height:2.4%;min-height:9px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);box-shadow:0 0 12px #967cff;left:50%;top:50%;transform-origin:center;pointer-events:none;opacity:.92}.core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:radial-gradient(circle,#22265e,#17164b);box-shadow:0 0 18px #ffcf36;pointer-events:none}.core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,44px)}
-.obstacle{z-index:1}.core{z-index:1}.flag{z-index:2;position:absolute;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);transition:opacity .3s,filter .3s}
-.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 10px #ff2c66}.flag.shielded{border-color:#00ffbd;box-shadow:0 0 20px #00ffbd,0 0 6px white}.flag.shielded:after{content:"🛡️";position:absolute;font-size:14px;right:-9px;top:-9px}
-.centerLabel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-align:center;text-shadow:0 0 10px red;font-weight:bold;pointer-events:none}
+.arena:before{content:"";position:absolute;inset:5%;border:2px dashed #35caff;border-radius:50%;opacity:.7;pointer-events:none}
+.obstacle-container{position:absolute;inset:0;pointer-events:none;transform-origin:center;will-change:transform;}
+.obstacle{position:absolute;width:24%;height:2.4%;min-height:9px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);box-shadow:0 0 12px #967cff;left:50%;top:50%;transform-origin:center;pointer-events:none;opacity:.92}
+.core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:radial-gradient(circle,#22265e,#17164b);box-shadow:0 0 18px #ffcf36;pointer-events:none;z-index:1}
+.core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,44px)}
+.flag{z-index:2;position:absolute;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;box-shadow:0 0 12px #00bfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);will-change:left,top;}
+.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66;box-shadow:0 0 10px #ff2c66}
+.flag.shielded{border-color:#00ffbd;box-shadow:0 0 20px #00ffbd,0 0 6px white}
+.flag.shielded:after{content:"🛡️";position:absolute;font-size:14px;right:-9px;top:-9px}
+.centerLabel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-align:center;text-shadow:0 0 10px red;font-weight:bold;pointer-events:none;z-index:3}
 .notice{border:2px solid var(--pink);border-radius:15px;padding:10px;margin-top:12px;text-align:center;box-shadow:0 0 15px #a500b8}.notice strong{color:#ff5de6;display:block;font-size:12px}.notice div{font-size:20px;font-weight:900}
 .bottom{padding:10px 14px;max-width:1200px;margin:auto}.flagstrip{display:flex;gap:8px;overflow-x:auto;padding:10px;border:1px solid #147aff;border-radius:18px;background:#050b22}.mini{font-size:25px;flex:0 0 auto;opacity:.95}.mini.out{opacity:.2;filter:grayscale(1)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.controls input,.controls select,.controls button{min-width:0;padding:12px;border-radius:10px;border:1px solid #00bfff;background:#071331;color:white;font-size:14px}.controls input{flex:1}.controls button{font-weight:bold;cursor:pointer}.controls button:active{transform:scale(.97)}.elim{background:#8e0e32!important;border-color:#ff305f!important}.return{background:#075b43!important;border-color:#19ffab!important}.shield{background:#064e7c!important;border-color:#00dfff!important}
 #log{max-height:260px;overflow:auto;font-size:12px;line-height:1.5}.logline{padding:5px 0;border-bottom:1px solid #17264b}.hint{text-align:center;color:#a9caff;font-size:12px;padding:12px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}#winnerScreen {
+@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}
+#winnerScreen {
 display: none;
 position: fixed;
 inset: 0;
@@ -33,12 +40,10 @@ justify-content: center;
 text-align: center;
 padding: 20px;
 }
-
 #winnerScreen.show {
 display: flex;
 animation: winnerFade 0.6s ease;
 }
-
 .winnerBox {
 width: min(700px, 100%);
 padding: 30px 16px;
@@ -47,17 +52,14 @@ border-radius: 24px;
 background: radial-gradient(circle, #25205e, #070b24);
 box-shadow: 0 0 35px #ffdc26;
 }
-
 #winnerTitle {
 font-size: clamp(30px, 8vw, 64px);
 color: #ffdc26;
 overflow-wrap: anywhere;
 }
-
 #winnerFlag {
 font-size: clamp(55px, 12vw, 90px);
 }
-
 .winnerBox button {
 padding: 14px 22px;
 border: 0;
@@ -66,35 +68,60 @@ background: #ffdc26;
 color: #101020;
 font-weight: bold;
 font-size: 16px;
+cursor: pointer;
 }
-
 @keyframes winnerFade {
 from { opacity: 0; }
 to { opacity: 1; }
 }
-
 </style>
 </head>
 <body>
-<header><div class="live">● DEMO LIVE</div><div class="stat">COUNTRIES <span id="count">64</span></div><div class="stat">REMAINING <span id="remaining">64</span></div><div class="stat">SHIELDS <span id="shields">0</span></div></header>
+<header>
+  <div class="live">● LIVE (<span id="fpsDisplay">--</span> FPS)</div>
+  <div class="stat">COUNTRIES <span id="count">64</span></div>
+  <div class="stat">REMAINING <span id="remaining">64</span></div>
+  <div class="stat">SHIELDS <span id="shields">0</span></div>
+</header>
 <h1>FLAGS WAR<br><span>ARENA ⚔️</span></h1>
 <div class="layout">
- <section class="panel left"><h2>🏆 GAME COMMANDS</h2>
- <div class="cmd"><b class="red">⚔️ Eliminate [Country]</b>Remove the flag</div>
- <div class="cmd"><b class="green">🔄 Return [Country]</b>Bring the flag back</div>
- <div class="cmd"><b class="cyan">🛡️ Shield [Country]</b>Protect for 30 seconds</div>
- <h2 style="margin-top:16px">TRY A COMMAND</h2>
- <div class="cmd">Examples:<br><b>Eliminate India</b><b>Return USA</b><b>Shield Japan</b></div>
- <div class="notice"><strong>LAST ELIMINATED</strong><div id="lastOut">NONE YET</div></div>
+ <section class="panel left">
+  <h2>🏆 GAME COMMANDS</h2>
+  <div class="cmd"><b class="red">⚔️ Eliminate [Country]</b>Remove the flag</div>
+  <div class="cmd"><b class="green">🔄 Return [Country]</b>Bring the flag back</div>
+  <div class="cmd"><b class="cyan">🛡️ Shield [Country]</b>Protect for 30 seconds</div>
+  <h2 style="margin-top:16px">TRY A COMMAND</h2>
+  <div class="cmd">Examples:<br><b>Eliminate India</b><b>Return USA</b><b>Shield Japan</b></div>
+  <div class="notice"><strong>LAST ELIMINATED</strong><div id="lastOut">NONE YET</div></div>
  </section>
- <section class="center"><div class="arena" id="arena"><div class="core"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(22deg) translateY(-145px)"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(-42deg) translateY(-118px)"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(8deg) translateY(145px)"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(48deg) translateY(110px)"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(-18deg) translateX(-150px)"></div><div class="obstacle" style="transform:translate(-50%,-50%) rotate(18deg) translateX(150px)"></div><div class="centerLabel">LIVE<br>ARENA</div></div>
- <div class="notice"><strong>NEXT ACTION / STATUS</strong><div id="status">ARENA READY</div></div>
- <div class="controls"><select id="country"></select><button class="elim" onclick="act('eliminate')">⚔️ Eliminate</button><button class="return" onclick="act('return')">🔄 Return</button><button class="shield" onclick="act('shield')">🛡️ Shield 30s</button></div>
- <div class="controls"><input id="command" placeholder="Try: Eliminate India" autocomplete="off"><button onclick="runCommand()">RUN COMMAND</button><button onclick="resetGame()">RESET</button></div>
+ <section class="center">
+  <div class="arena" id="arena">
+   <div class="core"></div>
+   <div class="obstacle-container" id="obstacleContainer">
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(22deg) translateY(-145px)"></div>
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(-42deg) translateY(-118px)"></div>
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(8deg) translateY(145px)"></div>
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(48deg) translateY(110px)"></div>
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(-18deg) translateX(-150px)"></div>
+    <div class="obstacle" style="transform:translate(-50%,-50%) rotate(18deg) translateX(150px)"></div>
+   </div>
+   <div class="centerLabel">LIVE<br>ARENA</div>
+  </div>
+  <div class="notice"><strong>NEXT ACTION / STATUS</strong><div id="status">ARENA READY</div></div>
+  <div class="controls"><select id="country"></select><button class="elim" onclick="act('eliminate')">⚔️ Eliminate</button><button class="return" onclick="act('return')">🔄 Return</button><button class="shield" onclick="act('shield')">🛡️ Shield 30s</button></div>
+  <div class="controls"><input id="command" placeholder="Try: Eliminate India" autocomplete="off"><button onclick="runCommand()">RUN COMMAND</button><button onclick="resetGame()">RESET</button></div>
  </section>
- <section class="panel right"><h2>💬 COMMAND LOG</h2><div id="log"><div class="logline">System: Demo ready. Choose a country and try a command.</div></div><div class="hint">This is a local demo. YouTube chat is not connected yet.</div></section>
+ <section class="panel right">
+  <h2>💬 COMMAND LOG</h2>
+  <div id="log"><div class="logline">System: Demo ready. Choose a country and try a command.</div></div>
+  <div class="hint">Optimized physics engine running at high frame rate.</div>
+ </section>
 </div>
-<div class="bottom"><div class="flagstrip" id="strip"></div><div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo only — not connected to real YouTube Live Chat</div></div><div id="winnerScreen" role="dialog" aria-modal="true">
+<div class="bottom">
+  <div class="flagstrip" id="strip"></div>
+  <div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Flags War Arena Optimized</div>
+</div>
+<div id="winnerScreen" role="dialog" aria-modal="true">
   <div class="winnerBox">
     <div style="font-size:70px">🏆</div>
     <div id="winnerFlag">🇮🇳</div>
@@ -105,195 +132,362 @@ to { opacity: 1; }
 </div>
 
 <script>
-const countries=[
+const countries = [
 ["United States","🇺🇸"],["China","🇨🇳"],["India","🇮🇳"],["Brazil","🇧🇷"],["Canada","🇨🇦"],["Germany","🇩🇪"],["France","🇫🇷"],["Japan","🇯🇵"],["Australia","🇦🇺"],["Russia","🇷🇺"],["South Korea","🇰🇷"],["Italy","🇮🇹"],["United Kingdom","🇬🇧"],["Mexico","🇲🇽"],["Spain","🇪🇸"],["Turkey","🇹🇷"],["Saudi Arabia","🇸🇦"],["South Africa","🇿🇦"],["Argentina","🇦🇷"],["Norway","🇳🇴"],["Sweden","🇸🇪"],["Finland","🇫🇮"],["Denmark","🇩🇰"],["Netherlands","🇳🇱"],["Belgium","🇧🇪"],["Switzerland","🇨🇭"],["Austria","🇦🇹"],["Poland","🇵🇱"],["Ukraine","🇺🇦"],["Greece","🇬🇷"],["Portugal","🇵🇹"],["Ireland","🇮🇪"],["New Zealand","🇳🇿"],["Indonesia","🇮🇩"],["Pakistan","🇵🇰"],["Bangladesh","🇧🇩"],["Nepal","🇳🇵"],["Sri Lanka","🇱🇰"],["Thailand","🇹🇭"],["Vietnam","🇻🇳"],["Philippines","🇵🇭"],["Malaysia","🇲🇾"],["Singapore","🇸🇬"],["Egypt","🇪🇬"],["Nigeria","🇳🇬"],["Kenya","🇰🇪"],["Morocco","🇲🇦"],["Algeria","🇩🇿"],["Israel","🇮🇱"],["United Arab Emirates","🇦🇪"],["Qatar","🇶🇦"],["Iran","🇮🇷"],["Iraq","🇮🇶"],["Chile","🇨🇱"],["Colombia","🇨🇴"],["Peru","🇵🇪"],["Venezuela","🇻🇪"],["Cuba","🇨🇺"],["Jamaica","🇯🇲"],["Iceland","🇮🇸"],["Romania","🇷🇴"],["Czechia","🇨🇿"],["Hungary","🇭🇺"],["Croatia","🇭🇷"]
-].map(([name,flag],i)=>({name,flag,out:false,shieldUntil:0,x:50,y:50,id:i}));
-const arena=document.getElementById('arena'),select=document.getElementById('country'),strip=document.getElementById('strip');
-countries.forEach((c,i)=>{c.vx=(Math.random()*2-1)*1.25;c.vy=(Math.random()*2-1)*1.25;let opt=document.createElement('option');opt.value=c.name;opt.textContent=c.flag+' '+c.name;select.appendChild(opt);
-let el=document.createElement('div');el.className='flag';el.textContent=c.flag;el.title=c.name;let angle=(i/64)*Math.PI*2-Math.PI/2;let radius=34+(i%3)*4;c.x=50+Math.cos(angle)*radius;c.y=50+Math.sin(angle)*radius;el.style.left=c.x+'%';el.style.top=c.y+'%';el.id='flag'+i;arena.appendChild(el);
-let mini=document.createElement('span');mini.className='mini';mini.textContent=c.flag;mini.id='mini'+i;mini.title=c.name;strip.appendChild(mini);
+].map(([name,flag],i)=>({name,flag,out:false,shieldUntil:0,x:0,y:0,vx:0,vy:0,id:i}));
+
+const arena = document.getElementById('arena');
+const select = document.getElementById('country');
+const strip = document.getElementById('strip');
+const obstacleContainer = document.getElementById('obstacleContainer');
+
+// Pre-parse obstacle structural data for collision without DOM queries during loop
+const obstacleDefs = [
+  {angle: 22 * Math.PI/180, distY: -145, distX: 0, width: 0.24, height: 20},
+  {angle: -42 * Math.PI/180, distY: -118, distX: 0, width: 0.24, height: 20},
+  {angle: 8 * Math.PI/180, distY: 145, distX: 0, width: 0.24, height: 20},
+  {angle: 48 * Math.PI/180, distY: 110, distX: 0, width: 0.24, height: 20},
+  {angle: -18 * Math.PI/180, distY: 0, distX: -150, width: 0.24, height: 20},
+  {angle: 18 * Math.PI/180, distY: 0, distX: 150, width: 0.24, height: 20}
+];
+
+countries.forEach((c, i) => {
+  let opt = document.createElement('option');
+  opt.value = c.name;
+  opt.textContent = c.flag + ' ' + c.name;
+  select.appendChild(opt);
+
+  let el = document.createElement('div');
+  el.className = 'flag';
+  el.textContent = c.flag;
+  el.title = c.name;
+  el.id = 'flag' + i;
+  arena.appendChild(el);
+
+  let mini = document.createElement('span');
+  mini.className = 'mini';
+  mini.textContent = c.flag;
+  mini.id = 'mini' + i;
+  mini.title = c.name;
+  strip.appendChild(mini);
 });
-function update(){let now=Date.now(),remaining=0,shields=0;countries.forEach(c=>{if(!c.out)remaining++;if(c.shieldUntil>now)shields++;let el=document.getElementById('flag'+c.id),mi=document.getElementById('mini'+c.id);el.classList.toggle('out',c.out);el.classList.toggle('shielded',c.shieldUntil>now);mi.classList.toggle('out',c.out)});document.getElementById('remaining').textContent=remaining;document.getElementById('shields').textContent=shields;document.getElementById('count').textContent=countries.length;}
-function log(msg){let l=document.createElement('div');l.className='logline';l.textContent=new Date().toLocaleTimeString()+' — '+msg;document.getElementById('log').prepend(l)}let gameOver = false;
+
+function updateStats() {
+  let now = Date.now(), remaining = 0, shields = 0;
+  countries.forEach(c => {
+    if (!c.out) remaining++;
+    if (c.shieldUntil > now) shields++;
+    let el = document.getElementById('flag' + c.id);
+    let mi = document.getElementById('mini' + c.id);
+    el.classList.toggle('out', c.out);
+    el.classList.toggle('shielded', c.shieldUntil > now);
+    mi.classList.toggle('out', c.out);
+  });
+  document.getElementById('remaining').textContent = remaining;
+  document.getElementById('shields').textContent = shields;
+  document.getElementById('count').textContent = countries.length;
+}
+
+function log(msg) {
+  let l = document.createElement('div');
+  l.className = 'logline';
+  l.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
+  document.getElementById('log').prepend(l);
+}
+
+let gameOver = false;
 
 function speakWinner(country) {
-if (!('speechSynthesis' in window)) return;
-
-window.speechSynthesis.cancel();
-
-const voice = new SpeechSynthesisUtterance(
-country.name + ' is the winner!'
-);
-
-voice.lang = 'en-US';
-voice.rate = 0.9;
-voice.pitch = 1;
-
-window.speechSynthesis.speak(voice);
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const voice = new SpeechSynthesisUtterance(country.name + ' is the winner!');
+  voice.lang = 'en-US';
+  voice.rate = 0.9;
+  voice.pitch = 1;
+  window.speechSynthesis.speak(voice);
 }
 
 function showWinner(country) {
-gameOver = true;
-
-document.getElementById('winnerFlag').textContent = country.flag;
-document.getElementById('winnerTitle').textContent =
-country.name.toUpperCase() + ' IS THE WINNER!';
-
-document.getElementById('winnerMessage').textContent =
-'Congratulations, ' + country.name + '!';
-
-document.getElementById('winnerScreen').classList.add('show');
-document.getElementById('status').textContent =
-country.name.toUpperCase() + ' WINS!';
-
-log('🏆 ' + country.name + ' IS THE WINNER!');
-beep(900);
-speakWinner(country);
- setTimeout(() => {
-  resetGame();
-}, 3000);
+  gameOver = true;
+  document.getElementById('winnerFlag').textContent = country.flag;
+  document.getElementById('winnerTitle').textContent = country.name.toUpperCase() + ' IS THE WINNER!';
+  document.getElementById('winnerMessage').textContent = 'Congratulations, ' + country.name + '!';
+  document.getElementById('winnerScreen').classList.add('show');
+  document.getElementById('status').textContent = country.name.toUpperCase() + ' WINS!';
+  log('🏆 ' + country.name + ' IS THE WINNER!');
+  beep(900);
+  speakWinner(country);
 }
 
 function checkWinner() {
-const active = countries.filter(country => !country.out);
-
-if (active.length === 1 && !gameOver) {
-showWinner(active[0]);
-}
-
-if (active.length === 0 && !gameOver) {
-gameOver = true;
-
-```
-document.getElementById('winnerFlag').textContent = '⚔️';
-document.getElementById('winnerTitle').textContent = 'NO WINNER!';
-document.getElementById('winnerMessage').textContent =
-  'All countries have been eliminated.';
-
-document.getElementById('winnerScreen').classList.add('show');
-log('Draw: all countries eliminated.');
-```
-
-}
-
-if (active.length > 1 && gameOver) {
-gameOver = false;
-document.getElementById('winnerScreen').classList.remove('show');
-
-```
-if ('speechSynthesis' in window) {
-  window.speechSynthesis.cancel();
-}
-```
-
-}
-}
-
-function beep(freq=600){try{let ctx=new(window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);g.gain.value=.06;o.start();o.stop(ctx.currentTime+.12)}catch(e){}}
-function act(action){let c=countries.find(c=>c.name===select.value);if(!c)return;let now=Date.now();
-if(action==='eliminate'){if(c.shieldUntil>now){document.getElementById('status').textContent=c.name+' SHIELDED!';log(c.name+' was protected by shield.');beep(250);return}if(c.out){log(c.name+' is already eliminated.');return}c.out=true;document.getElementById('lastOut').textContent=c.flag+' '+c.name.toUpperCase();document.getElementById('status').textContent=c.name.toUpperCase()+' ELIMINATED';log('⚔️ Eliminated '+c.name);beep(180)}
-if(action==='return'){if(!c.out){log(c.name+' is already in the arena.');return}c.out=false;document.getElementById('status').textContent=c.name.toUpperCase()+' RETURNED';log('🔄 Returned '+c.name);beep(750)}
-if(action==='shield'){c.shieldUntil=now+30000;document.getElementById('status').textContent=c.name.toUpperCase()+' SHIELDED · 30s';log('🛡️ Shield activated for '+c.name+' (30 seconds)');beep(900)}
-update();
-checkWinner();
-}
-function runCommand(){let v=document.getElementById('command').value.trim();if(!v)return;let m=v.match(/^(eliminate|return|shield)\s+(.+)$/i);if(!m){log('Unknown command. Use: Eliminate India / Return USA / Shield Japan');return}let action=m[1].toLowerCase(),name=m[2].trim().toLowerCase();let c=countries.find(c=>c.name.toLowerCase()===name|| (name==='usa'&&c.name==='United States')||(name==='uk'&&c.name==='United Kingdom'));if(!c){log('Country not found: '+m[2]);return}select.value=c.name;act(action);document.getElementById('command').value=''}
-document.getElementById('command').addEventListener('keydown',e=>{if(e.key==='Enter')runCommand()});
-function resetGame() {
-gameOver = false;
-
-if ('speechSynthesis' in window) {
-window.speechSynthesis.cancel();
-}
-
-document.getElementById('winnerScreen').classList.remove('show');
-
-physicsReady = false;
-
-countries.forEach(c => {
-c.out = false;
-c.shieldUntil = 0;
-});
-
-document.getElementById('lastOut').textContent = 'NONE YET';
-document.getElementById('status').textContent = 'ARENA RESET';
-document.getElementById('log').innerHTML = '';
-
-log('Game reset. All flags returned.');
-update();
-}
-
-
-// Bouncing-ball movement: flags travel around the arena and bounce off walls/each other.
-let physicsReady=false, lastFrame=0;
-function animateArena(ts){
-  const rect=arena.getBoundingClientRect();
-  const size=Math.min(rect.width,rect.height);
-  const cx=arena.clientWidth/2, cy=arena.clientHeight/2;
-  const border=size*0.44;
-  const active=countries.filter(c=>!c.out);
-  if(!physicsReady){
-    active.forEach(c=>{
-      const angle=Math.random()*Math.PI*2, r=Math.random()*border*0.72;
-      c.px=cx+Math.cos(angle)*r; c.py=cy+Math.sin(angle)*r;
-      const speed=1.2+Math.random()*1.5;
-      let a=Math.random()*Math.PI*2;c.vx=Math.cos(a)*speed;c.vy=Math.sin(a)*speed;
-    });
-    physicsReady=true;
+  const active = countries.filter(country => !country.out);
+  if (active.length === 1 && !gameOver) {
+    showWinner(active[0]);
   }
-  const dt=Math.min((ts-(lastFrame||ts))/16.67,2); lastFrame=ts;
-  const radius=Math.max(13,arena.clientWidth*0.034);
-  active.forEach(c=>{
-    c.px+=c.vx*dt; c.py+=c.vy*dt;
-    let dx=c.px-cx,dy=c.py-cy,dist=Math.hypot(dx,dy)||1;
-    if(dist>border-radius){
-      const nx=dx/dist,ny=dy/dist;
-      c.px=cx+nx*(border-radius);c.py=cy+ny*(border-radius);
-      const dot=c.vx*nx+c.vy*ny;c.vx-=2*dot*nx;c.vy-=2*dot*ny;
+  if (active.length === 0 && !gameOver) {
+    gameOver = true;
+    document.getElementById('winnerFlag').textContent = '⚔️';
+    document.getElementById('winnerTitle').textContent = 'NO WINNER!';
+    document.getElementById('winnerMessage').textContent = 'All countries have been eliminated.';
+    document.getElementById('winnerScreen').classList.add('show');
+    log('Draw: all countries eliminated.');
+  }
+}
+
+function beep(freq = 600) {
+  try {
+    let ctx = new (window.AudioContext || window.webkitAudioContext)(),
+        o = ctx.createOscillator(),
+        g = ctx.createGain();
+    o.frequency.value = freq;
+    o.connect(g);
+    g.connect(ctx.destination);
+    g.gain.value = .06;
+    o.start();
+    o.stop(ctx.currentTime + .12);
+  } catch (e) {}
+}
+
+function act(action) {
+  let c = countries.find(c => c.name === select.value);
+  if (!c) return;
+  let now = Date.now();
+  if (action === 'eliminate') {
+    if (c.shieldUntil > now) {
+      document.getElementById('status').textContent = c.name + ' SHIELDED!';
+      log(c.name + ' was protected by shield.');
+      beep(250);
+      return;
     }
+    if (c.out) {
+      log(c.name + ' is already eliminated.');
+      return;
+    }
+    c.out = true;
+    document.getElementById('lastOut').textContent = c.flag + ' ' + c.name.toUpperCase();
+    document.getElementById('status').textContent = c.name.toUpperCase() + ' ELIMINATED';
+    log('⚔️ Eliminated ' + c.name);
+    beep(180);
+  }
+  if (action === 'return') {
+    if (!c.out) {
+      log(c.name + ' is already in the arena.');
+      return;
+    }
+    c.out = false;
+    document.getElementById('status').textContent = c.name.toUpperCase() + ' RETURNED';
+    log('🔄 Returned ' + c.name);
+    beep(750);
+  }
+  if (action === 'shield') {
+    c.shieldUntil = now + 30000;
+    document.getElementById('status').textContent = c.name.toUpperCase() + ' SHIELDED · 30s';
+    log('🛡️ Shield activated for ' + c.name + ' (30 seconds)');
+    beep(900);
+  }
+  updateStats();
+  checkWinner();
+}
+
+function runCommand() {
+  let v = document.getElementById('command').value.trim();
+  if (!v) return;
+  let m = v.match(/^(eliminate|return|shield)\s+(.+)$/i);
+  if (!m) {
+    log('Unknown command. Use: Eliminate India / Return USA / Shield Japan');
+    return;
+  }
+  let action = m[1].toLowerCase(), name = m[2].trim().toLowerCase();
+  let c = countries.find(c => c.name.toLowerCase() === name || (name === 'usa' && c.name === 'United States') || (name === 'uk' && c.name === 'United Kingdom'));
+  if (!c) {
+    log('Country not found: ' + m[2]);
+    return;
+  }
+  select.value = c.name;
+  act(action);
+  document.getElementById('command').value = '';
+}
+
+document.getElementById('command').addEventListener('keydown', e => { if (e.key === 'Enter') runCommand(); });
+
+function resetGame() {
+  gameOver = false;
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.getElementById('winnerScreen').classList.remove('show');
+  physicsReady = false;
+  countries.forEach(c => {
+    c.out = false;
+    c.shieldUntil = 0;
   });
-  // Bounce flags off the purple arena bumpers (rounded capsule approximated as a segment).
-  const bumpers=[...arena.querySelectorAll('.obstacle')];
-  bumpers.forEach(ob=>{
-    const ar=arena.getBoundingClientRect(), br=ob.getBoundingClientRect();
-    const x1=br.left-ar.left, y1=br.top-ar.top, x2=x1+br.width, y2=y1+br.height;
-    const mx=(x1+x2)/2,my=(y1+y2)/2;
-    const angle=parseFloat((ob.style.transform.match(/rotate\\(([-\\d.]+)deg\\)/)||[])[1]||0)*Math.PI/180;
-    const len=br.width, ux=Math.cos(angle), uy=Math.sin(angle);
-    active.forEach(c=>{
-      const ax=mx-ux*len/2, ay=my-uy*len/2, bx=mx+ux*len/2, by=my+uy*len/2;
-      const vx=bx-ax, vy=by-ay, denom=vx*vx+vy*vy||1;
-      const t=Math.max(0,Math.min(1,((c.px-ax)*vx+(c.py-ay)*vy)/denom));
-      const qx=ax+t*vx,qy=ay+t*vy, dx=c.px-qx,dy=c.py-qy,d=Math.hypot(dx,dy)||0.01;
-      const min=radius+Math.max(5,br.height/2);
-      if(d<min){
-        const nx=dx/d,ny=dy/d;c.px=qx+nx*min;c.py=qy+ny*min;
-        const dot=c.vx*nx+c.vy*ny;c.vx-=2*dot*nx;c.vy-=2*dot*ny;
+  document.getElementById('lastOut').textContent = 'NONE YET';
+  document.getElementById('status').textContent = 'ARENA RESET';
+  document.getElementById('log').innerHTML = '';
+  log('Game reset. All flags returned.');
+  updateStats();
+}
+
+// Optimized Physics & Animation Loop
+let physicsReady = false;
+let lastFrame = performance.now();
+let frameCount = 0;
+let lastFpsUpdate = performance.now();
+let globalObstacleAngle = 0;
+
+function animateArena(ts) {
+  // Measure FPS accurately
+  frameCount++;
+  if (ts - lastFpsUpdate >= 1000) {
+    let currentFps = Math.round((frameCount * 1000) / (ts - lastFpsUpdate));
+    document.getElementById('fpsDisplay').textContent = currentFps;
+    frameCount = 0;
+    lastFpsUpdate = ts;
+  }
+
+  const arenaWidth = arena.clientWidth;
+  const arenaHeight = arena.clientHeight;
+  const cx = arenaWidth / 2;
+  const cy = arenaHeight / 2;
+  const size = Math.min(arenaWidth, arenaHeight);
+  const border = size * 0.44;
+  const flagRadius = Math.max(16, arenaWidth * 0.027);
+
+  const active = countries.filter(c => !c.out);
+
+  if (!physicsReady && arenaWidth > 0) {
+    active.forEach((c, idx) => {
+      const angle = (idx / active.length) * Math.PI * 2;
+      const r = Math.random() * border * 0.6;
+      c.x = cx + Math.cos(angle) * r;
+      c.y = cy + Math.sin(angle) * r;
+      const speed = 1.5 + Math.random() * 1.5;
+      let a = Math.random() * Math.PI * 2;
+      c.vx = Math.cos(a) * speed;
+      c.vy = Math.sin(a) * speed;
+    });
+    physicsReady = true;
+  }
+
+  const dt = Math.min((ts - lastFrame) / 16.67, 2);
+  lastFrame = ts;
+
+  // Rotate obstacle container smoothly
+  globalObstacleAngle += 0.003 * dt;
+  obstacleContainer.style.transform = `rotate(${globalObstacleAngle}rad)`;
+
+  if (physicsReady) {
+    // 1. Move and bounce off outer boundary
+    active.forEach(c => {
+      c.x += c.vx * dt;
+      c.y += c.vy * dt;
+
+      let dx = c.x - cx;
+      let dy = c.y - cy;
+      let dist = Math.hypot(dx, dy) || 1;
+
+      if (dist > border - flagRadius) {
+        let nx = dx / dist;
+        let ny = dy / dist;
+        c.x = cx + nx * (border - flagRadius);
+        c.y = cy + ny * (border - flagRadius);
+        let dot = c.vx * nx + c.vy * ny;
+        c.vx -= 2 * dot * nx;
+        c.vy -= 2 * dot * ny;
       }
     });
-  });
-  // Simple elastic-ish collisions between flag balls.
-  for(let i=0;i<active.length;i++)for(let j=i+1;j<active.length;j++){
-    const a=active[i],b=active[j],dx=b.px-a.px,dy=b.py-a.py,d=Math.hypot(dx,dy)||0.01,min=radius*1.8;
-    if(d<min){
-      const nx=dx/d,ny=dy/d,overlap=(min-d)/2;
-      a.px-=nx*overlap;a.py-=ny*overlap;b.px+=nx*overlap;b.py+=ny*overlap;
-      const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
-      if(rel>0){a.vx-=rel*nx;a.vy-=rel*ny;b.vx+=rel*nx;b.vy+=rel*ny;}
-      // Tiny random nudge makes collisions feel lively.
-      a.vx+=(Math.random()-.5)*.12;b.vx+=(Math.random()-.5)*.12;
-      a.vy+=(Math.random()-.5)*.12;b.vy+=(Math.random()-.5)*.12;
+
+    // 2. Obstacle collision (using rotated analytical coordinates)
+    active.forEach(c => {
+      obstacleDefs.forEach(ob => {
+        // Rotate obstacle position by globalObstacleAngle
+        let localAngle = ob.angle + globalObstacleAngle;
+        let obX = cx + ob.distX * Math.cos(globalObstacleAngle) - ob.distY * Math.sin(globalObstacleAngle);
+        let obY = cy + ob.distX * Math.sin(globalObstacleAngle) + ob.distY * Math.cos(globalObstacleAngle);
+
+        // Approximate obstacle as a line segment
+        let len = arenaWidth * ob.width;
+        let ux = Math.cos(localAngle);
+        let uy = Math.sin(localAngle);
+
+        let ax = obX - ux * len / 2;
+        let ay = obY - uy * len / 2;
+        let bx = obX + ux * len / 2;
+        let by = obY + uy * len / 2;
+
+        let vx = bx - ax;
+        let vy = by - ay;
+        let denom = vx * vx + vy * vy || 1;
+        let t = Math.max(0, Math.min(1, ((c.x - ax) * vx + (c.y - ay) * vy) / denom));
+        
+        let qx = ax + t * vx;
+        let qy = ay + t * vy;
+        let dx = c.x - qx;
+        let dy = c.y - qy;
+        let d = Math.hypot(dx, dy) || 0.01;
+        let minAllowed = flagRadius + 6;
+
+        if (d < minAllowed) {
+          let nx = dx / d;
+          let ny = dy / d;
+          c.x = qx + nx * minAllowed;
+          c.y = qy + ny * minAllowed;
+          let dot = c.vx * nx + c.vy * ny;
+          if (dot < 0) {
+            c.vx -= 1.8 * dot * nx;
+            c.vy -= 1.8 * dot * ny;
+          }
+        }
+      });
+    });
+
+    // 3. Ball-to-ball collisions
+    for (let i = 0; i < active.length; i++) {
+      for (let j = i + 1; j < active.length; j++) {
+        let a = active[i], b = active[j];
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let d = Math.hypot(dx, dy) || 0.01;
+        let minDist = flagRadius * 2;
+
+        if (d < minDist) {
+          let nx = dx / d;
+          let ny = dy / d;
+          let overlap = (minDist - d) / 2;
+
+          a.x -= nx * overlap;
+          a.y -= ny * overlap;
+          b.x += nx * overlap;
+          b.y += ny * overlap;
+
+          let kx = a.vx - b.vx;
+          let ky = a.vy - b.vy;
+          let p = 2 * (nx * kx + ny * ky) / 2;
+
+          if (p > 0) {
+            a.vx -= p * nx;
+            a.vy -= p * ny;
+            b.vx += p * nx;
+            b.vy += p * ny;
+          }
+        }
+      }
     }
   }
-  countries.forEach(c=>{
-    const el=document.getElementById('flag'+c.id);
-    if(!c.out && Number.isFinite(c.px)){
-      el.style.left=c.px+'px';el.style.top=c.py+'px';
+
+  // Render positions to DOM
+  countries.forEach(c => {
+    let el = document.getElementById('flag' + c.id);
+    if (!c.out && Number.isFinite(c.x)) {
+      el.style.left = c.x + 'px';
+      el.style.top = c.y + 'px';
     }
   });
+
   requestAnimationFrame(animateArena);
 }
+
 requestAnimationFrame(animateArena);
-setInterval(update,500);update();
+setInterval(updateStats, 500);
+updateStats();
 </script>
-</body></html>
+</body>
+</html>
