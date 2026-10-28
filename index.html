@@ -3,182 +3,61 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Flags War Arena</title>
-
 <style>
 *{box-sizing:border-box}
-html,body{
- margin:0;width:100%;height:100%;overflow:hidden;
- background:#050817;color:white;
- font-family:Arial,Helvetica,sans-serif
-}
-#game{
- position:relative;width:100%;height:100dvh;overflow:hidden;
- background:radial-gradient(ellipse at center,#19285a 0%,#090e25 55%,#030510 100%);
-}
-#top{
- position:absolute;top:3%;width:100%;text-align:center;z-index:5;
- font-size:clamp(24px,6vw,42px);font-weight:1000;
- letter-spacing:2px;color:#ffe45c;
- text-shadow:0 3px #9d3819,0 0 20px #ffb323;
-}
-#subtitle{
- position:absolute;top:10%;width:100%;text-align:center;
- color:#a9faff;font-size:10px;letter-spacing:3px;
-}
-#arena{
- position:absolute;left:50%;top:47%;
- transform:translate(-50%,-50%);
- width:min(94vw,72vh);aspect-ratio:1;border-radius:50%;
- border:3px solid #00eaff;
- box-shadow:0 0 12px #00eaff,0 0 40px #007bff66,
- inset 0 0 30px #00bfff55;
- background:radial-gradient(circle,#151f4e,#080d27 75%);
- overflow:hidden;
-}
-#rotating{
- position:absolute;inset:4%;border:2px dashed #00eaff88;
- border-radius:50%;animation:spin 15s linear infinite;
-}
-#rotating:before{
- content:"";position:absolute;inset:12%;border:1px solid #ffdf4d77;
- border-radius:50%;
-}
-#rotating:after{
- content:"";position:absolute;inset:28%;
- border:1px dashed #6cf8ff99;border-radius:50%;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050711;color:white;font-family:Arial,sans-serif}
+#game{position:relative;width:100%;height:100dvh;overflow:hidden;background:radial-gradient(ellipse at center,#182453,#080c1d 65%,#02040b)}
+#top{position:absolute;top:3%;width:100%;text-align:center;font-size:clamp(27px,7vw,45px);font-weight:1000;color:#ffe65a;text-shadow:0 3px #a83216,0 0 18px #ffae24;z-index:5}
+#subtitle{position:absolute;top:10%;width:100%;text-align:center;font-size:10px;letter-spacing:3px;color:#92f5ff}
+#arena{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(94vw,70vh);aspect-ratio:1;border-radius:50%;border:3px solid #00eaff;box-shadow:0 0 12px #00eaff,0 0 35px #008cff66,inset 0 0 35px #00cfff44;background:radial-gradient(circle,#15204a,#070b21 72%);overflow:hidden}
+#menu{position:absolute;inset:3%;border:2px dashed #00eaffaa;border-radius:50%;animation:rotate 12s linear infinite}
+#menu:before{content:"";position:absolute;inset:13%;border:1px solid #ffd84d99;border-radius:50%}
+#menu:after{content:"";position:absolute;inset:29%;border:1px dashed #6ff8ff88;border-radius:50%}
+@keyframes rotate{to{transform:rotate(360deg)}}
 #balls{position:absolute;inset:0}
-.ball{
- position:absolute;width:7.3%;aspect-ratio:1;
- display:flex;align-items:center;justify-content:center;
- border-radius:50%;
- background:linear-gradient(145deg,#fff,#b6c9ed 65%,#52699a);
- border:1px solid white;
- box-shadow:0 2px 5px #0009,0 0 8px #8deaff66;
- font-size:clamp(15px,4vw,24px);
- transform:translate(-50%,-50%);
- will-change:left,top,transform,opacity;
- user-select:none;
-}
-.ball span{filter:drop-shadow(0 1px 1px #555)}
-#center{
- position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
- width:27%;aspect-ratio:1;border-radius:50%;
- display:flex;flex-direction:column;align-items:center;
- justify-content:center;text-align:center;
- background:radial-gradient(circle,#283c84,#0a1235);
- border:2px solid #ffe04b;
- box-shadow:0 0 20px #ffcc4477;
- z-index:3;
-}
-#star{font-size:clamp(24px,6vw,38px);color:#ffe45c}
-#centerText{font-size:clamp(8px,2.2vw,12px);font-weight:900;letter-spacing:1px}
-#announcement{
- position:absolute;left:50%;top:50%;
- transform:translate(-50%,-50%) scale(.5);
- opacity:0;z-index:10;pointer-events:none;
- width:90%;text-align:center;
- font-size:clamp(21px,6vw,38px);font-weight:1000;
- color:white;text-shadow:0 3px #8b1111,0 0 20px #ffda38;
- background:linear-gradient(90deg,#e92d20,#ff9e18,#e92d20);
- border:2px solid #ffe66a;border-radius:8px;
- padding:15px 5px;
- transition:transform .25s,opacity .25s;
-}
-#announcement.show{
- opacity:1;transform:translate(-50%,-50%) scale(1);
-}
-#bottom{
- position:absolute;top:calc(47% + min(47vw,36vh) + 3%);
- width:100%;text-align:center;font-size:clamp(15px,4vw,23px);
- font-weight:1000;letter-spacing:2px;color:#fff;
- text-shadow:0 0 12px #00cfff;
-}
-#stats{
- position:absolute;bottom:10%;left:3%;width:94%;
- display:flex;justify-content:space-between;gap:8px;
-}
-.pill{
- padding:9px 12px;border-radius:30px;
- border:1px solid #4c75b8;background:#101a38;
- font-size:clamp(10px,2.8vw,14px);font-weight:900;
-}
-#last{
- position:absolute;bottom:5.5%;width:100%;text-align:center;
- font-size:11px;color:#b5c7e8;letter-spacing:1px;
-}
-#controls{
- position:absolute;bottom:0;width:100%;height:5%;
- min-height:38px;display:flex;justify-content:center;gap:8px;
- align-items:center;background:#050918;border-top:1px solid #28385c;
-}
-button{
- border:1px solid #00cfff;background:#10244b;color:white;
- border-radius:20px;padding:6px 12px;font-weight:bold;
- font-size:11px;
-}
-#win{
- position:absolute;inset:0;z-index:20;
- display:none;align-items:center;justify-content:center;
- flex-direction:column;text-align:center;
- background:#030715ed;
-}
-#win h1{font-size:clamp(35px,10vw,65px);color:#ffe45c;
- text-shadow:0 0 25px orange;margin:10px}
-#winnerFlag{font-size:90px}
-#win p{font-size:20px;font-weight:bold}
-@media(min-width:700px){
- #arena{width:min(75vh,650px)}
-}
+.flag{position:absolute;left:50%;top:50%;width:7%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:clamp(18px,4.6vw,28px);transform:translate(-50%,-50%);filter:drop-shadow(0 2px 3px #000);will-change:left,top,transform}
+.flag span{display:block;animation:float 1.5s ease-in-out infinite alternate}
+@keyframes float{to{translate:0 -2px}}
+#center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:25%;aspect-ratio:1;border-radius:50%;border:2px solid #ffe05a;background:radial-gradient(circle,#293e83,#09122f);box-shadow:0 0 20px #ffd84d55;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:3;text-align:center}
+#center .star{font-size:clamp(27px,7vw,42px);color:#ffe65a}
+#center .label{font-size:clamp(8px,2.2vw,12px);font-weight:1000;letter-spacing:1px}
+#announce{position:absolute;z-index:10;top:50%;left:50%;width:92%;text-align:center;padding:13px 4px;background:linear-gradient(90deg,#d82220,#ffab17,#d82220);border:2px solid #ffe66a;border-radius:7px;font-size:clamp(21px,6vw,36px);font-weight:1000;text-shadow:0 3px #711414;transform:translate(-50%,-50%) scale(.4);opacity:0;pointer-events:none;transition:transform .2s,opacity .2s}
+#announce.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#bottom{position:absolute;top:calc(46% + min(47vw,35vh) + 3%);width:100%;text-align:center;font-size:clamp(15px,4vw,23px);font-weight:1000;letter-spacing:2px;text-shadow:0 0 12px #00cfff}
+#stats{position:absolute;bottom:10%;left:3%;width:94%;display:flex;justify-content:space-between;gap:8px}
+.pill{padding:9px 11px;border:1px solid #4167a9;border-radius:25px;background:#101a39;font-size:clamp(10px,2.8vw,14px);font-weight:bold}
+#last{position:absolute;bottom:5.5%;width:100%;text-align:center;font-size:11px;color:#b6c9ec}
+#controls{position:absolute;bottom:0;width:100%;min-height:39px;display:flex;justify-content:center;align-items:center;gap:8px;background:#050816;border-top:1px solid #29395d}
+button{background:#142750;border:1px solid #00cfff;color:white;border-radius:20px;padding:7px 12px;font-weight:bold;font-size:11px}
+#win{display:none;position:absolute;inset:0;z-index:20;background:#030715f5;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+#win h1{font-size:clamp(38px,10vw,64px);color:#ffe45c;text-shadow:0 0 25px orange}
+#wflag{font-size:90px}
 </style>
 </head>
-
 <body>
 <div id="game">
-
  <div id="top">YOU FROM?</div>
  <div id="subtitle">FLAGS WAR ARENA • BATTLE ROYALE</div>
-
  <div id="arena">
-  <div id="rotating"></div>
+  <div id="menu"></div>
   <div id="balls"></div>
-
-  <div id="center">
-   <div id="star">✦</div>
-   <div id="centerText">FLAG<br>BATTLE</div>
-  </div>
-
-  <div id="announcement"></div>
+  <div id="center"><div class="star">✦</div><div class="label">FLAG<br>BATTLE</div></div>
+  <div id="announce"></div>
  </div>
-
  <div id="bottom">ALL ELIMINATED</div>
-
- <div id="stats">
-  <div class="pill" id="remaining">COUNTRIES 64</div>
-  <div class="pill" id="timer">NEXT OUT 5.0s</div>
- </div>
-
+ <div id="stats"><div class="pill" id="count">COUNTRIES 64</div><div class="pill" id="clock">NEXT OUT 5.0s</div></div>
  <div id="last">LAST ELIMINATED: —</div>
-
  <div id="controls">
   <button id="restart">↻ RESTART</button>
   <button id="pause">Ⅱ PAUSE</button>
   <button id="speed">⚡ SPEED ×1</button>
  </div>
-
- <div id="win">
-  <div id="winnerFlag">🏆</div>
-  <h1>WINNER!</h1>
-  <p id="winnerName"></p>
-  <button onclick="startGame()">PLAY AGAIN</button>
- </div>
+ <div id="win"><div id="wflag">🏆</div><h1>WINNER!</h1><h2 id="winner"></h2><button onclick="start()">PLAY AGAIN</button></div>
 </div>
-
 <script>
-const countries=[
+const data=[
 ["🇺🇸","USA"],["🇨🇳","CHINA"],["🇮🇳","INDIA"],["🇧🇷","BRAZIL"],
 ["🇯🇵","JAPAN"],["🇬🇧","UK"],["🇫🇷","FRANCE"],["🇩🇪","GERMANY"],
 ["🇨🇦","CANADA"],["🇲🇽","MEXICO"],["🇰🇷","SOUTH KOREA"],["🇷🇺","RUSSIA"],
@@ -196,203 +75,98 @@ const countries=[
 ["🇨🇿","CZECHIA"],["🇷🇴","ROMANIA"],["🇭🇺","HUNGARY"],["🇶🇦","QATAR"],
 ["🇦🇪","UAE"],["🇲🇦","MOROCCO"],["🇹🇳","TUNISIA"],["🇨🇷","COSTA RICA"]
 ];
-
-const arena=document.getElementById("arena");
-const container=document.getElementById("balls");
-let balls=[],paused=false,speed=1,last=0,remaining=5,raf=null;
-let finished=false,announcementTimeout=null;
-
-function showMessage(message){
- const el=document.getElementById("announcement");
- el.textContent=message;
- el.classList.add("show");
- clearTimeout(announcementTimeout);
- announcementTimeout=setTimeout(()=>el.classList.remove("show"),1300);
+const arena=document.getElementById("arena"),layer=document.getElementById("balls");
+let balls=[],paused=false,speed=1,last=0,remaining=5,raf,done=false,msgTimer;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function message(s){
+ const el=document.getElementById("announce");el.textContent=s;el.classList.add("show");
+ clearTimeout(msgTimer);msgTimer=setTimeout(()=>el.classList.remove("show"),1200);
 }
-
-function updateStats(){
- const alive=balls.filter(b=>b.alive);
- document.getElementById("remaining").textContent="COUNTRIES "+alive.length;
- return alive;
+function stats(){
+ const a=balls.filter(b=>b.alive);
+ document.getElementById("count").textContent="COUNTRIES "+a.length;
+ return a;
 }
-
 function eliminate(){
- const alive=updateStats();
-
- if(alive.length<=1){
-  if(alive.length===1)declareWinner(alive[0]);
-  return;
- }
-
+ const alive=stats();
+ if(alive.length<=1){if(alive.length===1)winner(alive[0]);return;}
  const victim=alive[Math.floor(Math.random()*alive.length)];
  victim.alive=false;
- victim.el.style.transition="transform .25s,opacity .25s";
+ victim.el.style.transition="opacity .22s,transform .22s";
  victim.el.style.opacity="0";
- victim.el.style.transform="translate(-50%,-50%) scale(0) rotate(180deg)";
-
- document.getElementById("last").textContent=
-  "LAST ELIMINATED: "+victim.name;
-
- showMessage(victim.flag+" "+victim.name+" OUT!");
-
- setTimeout(()=>victim.el.remove(),300);
-
- const left=alive.filter(b=>b!==victim);
- document.getElementById("bottom").textContent=
-  left.length<=1 ? "FINAL BATTLE" : "ALL ELIMINATED";
+ victim.el.style.transform="translate(-50%,-50%) scale(0) rotate(160deg)";
+ setTimeout(()=>victim.el.remove(),240);
+ document.getElementById("last").textContent="LAST ELIMINATED: "+victim.name;
+ message(victim.flag+" "+victim.name+" OUT!");
+ if(alive.length===2)document.getElementById("bottom").textContent="FINAL BATTLE";
 }
-
-function declareWinner(winner){
- if(finished)return;
- finished=true;
- document.getElementById("winnerFlag").textContent=winner.flag;
- document.getElementById("winnerName").textContent=winner.name;
+function winner(b){
+ if(done)return;done=true;
+ document.getElementById("wflag").textContent=b.flag;
+ document.getElementById("winner").textContent=b.name;
  document.getElementById("win").style.display="flex";
 }
-
-function startGame(){
- cancelAnimationFrame(raf);
- clearTimeout(announcementTimeout);
-
- container.innerHTML="";
+function start(){
+ cancelAnimationFrame(raf);clearTimeout(msgTimer);
+ layer.innerHTML="";balls=[];paused=false;speed=1;remaining=5;done=false;
  document.getElementById("win").style.display="none";
  document.getElementById("bottom").textContent="ALL ELIMINATED";
  document.getElementById("last").textContent="LAST ELIMINATED: —";
- document.getElementById("announcement").classList.remove("show");
-
- balls=[];
- paused=false;
- speed=1;
- remaining=5;
- finished=false;
-
+ document.getElementById("announce").classList.remove("show");
  document.getElementById("pause").textContent="Ⅱ PAUSE";
  document.getElementById("speed").textContent="⚡ SPEED ×1";
-
- countries.forEach(([flag,name])=>{
-  const el=document.createElement("div");
-  el.className="ball";
-  el.innerHTML="<span>"+flag+"</span>";
-  el.title=name;
-  container.appendChild(el);
-
-  const angle=Math.random()*Math.PI*2;
-  const radius=Math.sqrt(Math.random())*.40;
-
-  balls.push({
-   el,flag,name,alive:true,
-   x:.5+Math.cos(angle)*radius,
-   y:.5+Math.sin(angle)*radius,
-   vx:(Math.random()-.5)*.28,
-   vy:(Math.random()-.5)*.28,
-   phase:Math.random()*6
-  });
+ data.forEach(([flag,name])=>{
+  const el=document.createElement("div");el.className="flag";
+  el.innerHTML="<span>"+flag+"</span>";el.title=name;layer.appendChild(el);
+  const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*.39;
+  balls.push({el,flag,name,alive:true,x:.5+Math.cos(a)*r,y:.5+Math.sin(a)*r,
+   vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,phase:Math.random()*6});
  });
-
- updateStats();
- last=performance.now();
- raf=requestAnimationFrame(loop);
+ stats();last=performance.now();raf=requestAnimationFrame(loop);
 }
-
 function loop(now){
  raf=requestAnimationFrame(loop);
- const dt=Math.min((now-last)/1000,.035);
- last=now;
- if(paused||finished)return;
-
- const elapsed=now/1000;
+ const dt=Math.min((now-last)/1000,.03);last=now;
+ if(paused||done)return;
  remaining-=dt*speed;
-
- document.getElementById("timer").textContent=
-  "NEXT OUT "+Math.max(0,remaining).toFixed(1)+"s";
-
- balls.forEach((b,i)=>{
-  if(!b.alive)return;
-
+ document.getElementById("clock").textContent="NEXT OUT "+Math.max(0,remaining).toFixed(1)+"s";
+ const t=now/1000;
+ for(let i=0;i<balls.length;i++){
+  const b=balls[i];if(!b.alive)continue;
   b.phase+=dt*2;
-  b.vx+=Math.sin(elapsed*1.3+b.phase)*dt*.025;
-  b.vy+=Math.cos(elapsed+b.phase)*dt*.025;
-
-  // Smooth movement with controlled velocity
-  b.vx=Math.max(-.25,Math.min(.25,b.vx));
-  b.vy=Math.max(-.25,Math.min(.25,b.vy));
-
-  b.x+=b.vx*dt*speed;
-  b.y+=b.vy*dt*speed;
-
-  // Bounce from circular arena boundary
-  let dx=b.x-.5,dy=b.y-.5;
-  let dist=Math.hypot(dx,dy);
-  const maxR=.455;
-
-  if(dist>maxR){
-   const nx=dx/dist,ny=dy/dist;
-   b.x=.5+nx*maxR;
-   b.y=.5+ny*maxR;
-
-   const dot=b.vx*nx+b.vy*ny;
-   b.vx-=2*dot*nx;
-   b.vy-=2*dot*ny;
+  b.vx+=Math.sin(t*1.3+b.phase)*dt*.022;
+  b.vy+=Math.cos(t+b.phase)*dt*.022;
+  b.vx=clamp(b.vx,-.25,.25);b.vy=clamp(b.vy,-.25,.25);
+  b.x+=b.vx*dt*speed;b.y+=b.vy*dt*speed;
+  let dx=b.x-.5,dy=b.y-.5,d=Math.hypot(dx,dy),limit=.455;
+  if(d>limit){
+   const nx=dx/d,ny=dy/d;b.x=.5+nx*limit;b.y=.5+ny*limit;
+   const dot=b.vx*nx+b.vy*ny;b.vx-=2*dot*nx;b.vy-=2*dot*ny;
   }
-
-  // Flag-to-flag collisions
   for(let j=i+1;j<balls.length;j++){
-   const other=balls[j];
-   if(!other.alive)continue;
-
-   let ax=b.x-other.x,ay=b.y-other.y;
-   let d=Math.hypot(ax,ay)||.001;
-   const min=.073;
-
-   if(d<min){
-    const nx=ax/d,ny=ay/d;
-    const push=(min-d)*.5;
-
-    b.x+=nx*push;
-    b.y+=ny*push;
-    other.x-=nx*push;
-    other.y-=ny*push;
-
-    const relative=(b.vx-other.vx)*nx+
-                   (b.vy-other.vy)*ny;
-
-    if(relative<0){
-     b.vx-=relative*nx;
-     b.vy-=relative*ny;
-     other.vx+=relative*nx;
-     other.vy+=relative*ny;
-    }
+   const o=balls[j];if(!o.alive)continue;
+   let x=b.x-o.x,y=b.y-o.y,dist=Math.hypot(x,y)||.001;
+   if(dist<.075){
+    const nx=x/dist,ny=y/dist,p=(.075-dist)*.5;
+    b.x+=nx*p;b.y+=ny*p;o.x-=nx*p;o.y-=ny*p;
+    const rel=(b.vx-o.vx)*nx+(b.vy-o.vy)*ny;
+    if(rel<0){b.vx-=rel*nx;b.vy-=rel*ny;o.vx+=rel*nx;o.vy+=rel*ny;}
    }
   }
-
-  b.el.style.left=(b.x*100)+"%";
-  b.el.style.top=(b.y*100)+"%";
-  b.el.style.transform=
-   "translate(-50%,-50%) rotate("+Math.sin(b.phase)*8+"deg)";
- });
-
- if(remaining<=0){
-  eliminate();
-  remaining=5;
+  b.el.style.left=(b.x*100)+"%";b.el.style.top=(b.y*100)+"%";
+  b.el.style.transform="translate(-50%,-50%) rotate("+Math.sin(b.phase)*8+"deg)";
  }
+ if(remaining<=0){eliminate();remaining=5;}
 }
-
-document.getElementById("restart").onclick=startGame;
-
+document.getElementById("restart").onclick=start;
 document.getElementById("pause").onclick=()=>{
- paused=!paused;
- document.getElementById("pause").textContent=
-  paused?"▶ RESUME":"Ⅱ PAUSE";
- last=performance.now();
+ paused=!paused;document.getElementById("pause").textContent=paused?"▶ RESUME":"Ⅱ PAUSE";last=performance.now();
 };
-
 document.getElementById("speed").onclick=()=>{
  speed=speed===1?1.5:1;
- document.getElementById("speed").textContent=
-  speed===1?"⚡ SPEED ×1":"⚡ SPEED ×1.5";
+ document.getElementById("speed").textContent=speed===1?"⚡ SPEED ×1":"⚡ SPEED ×1.5";
 };
-
-startGame();
+start();
 </script>
 </body>
 </html>
