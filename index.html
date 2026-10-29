@@ -1,853 +1,449 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flags War Arena — Auto Battle</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Flags War Arena</title>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #070b16;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.app {
-  width: min(100%, 1100px);
-  margin: auto;
-  padding: 12px;
-}
-
-header {
-  text-align: center;
-  padding: 12px 4px 16px;
-}
-
-header h1 {
-  font-size: clamp(24px, 5vw, 42px);
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fff;
-  text-shadow: 0 0 18px #087cff;
-}
-
-header p {
-  color: #91a7c8;
-  font-size: 12px;
-  letter-spacing: 3px;
-  margin-top: 7px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.stat {
-  background: linear-gradient(145deg, #121e34, #0b1221);
-  border: 1px solid #263c60;
-  border-radius: 12px;
-  text-align: center;
-  padding: 12px 4px;
-}
-
-.stat .number {
-  font-size: clamp(20px, 5vw, 30px);
-  font-weight: 900;
-  color: #4eb5ff;
-}
-
-.stat .label {
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: #9cb0ce;
-  margin-top: 5px;
-}
-
-.arena-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-height: 76vh;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 50%;
-  background: radial-gradient(circle, #152a49 0%, #0a1428 57%, #050a14 100%);
-  border: 3px solid #267dff;
-  box-shadow:
-    0 0 12px #1685ff,
-    0 0 40px #0755bc55,
-    inset 0 0 35px #167dff22;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.arena-tag {
-  position: absolute;
-  left: 50%;
-  top: 8%;
-  transform: translateX(-50%);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #76c9ff;
-  pointer-events: none;
-  white-space: nowrap;
-  text-shadow: 0 0 10px #007bff;
-}
-
-.status {
-  margin-top: 12px;
-  padding: 13px;
-  text-align: center;
-  border: 1px solid #243a5c;
-  background: #0d1729;
-  border-radius: 12px;
-}
-
-.status-title {
-  font-size: 11px;
-  color: #8ea7ca;
-  letter-spacing: 2px;
-  margin-bottom: 7px;
-}
-
-#statusText {
-  font-size: 17px;
-  font-weight: 900;
-  color: #ffcf5a;
-}
-
-#countdown {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #66c7ff;
-}
-
-.progress {
-  height: 5px;
-  background: #24334c;
-  border-radius: 20px;
-  margin-top: 10px;
-  overflow: hidden;
-}
-
-#progressBar {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg, #00e5ff, #287bff);
-  border-radius: 20px;
-  transition: width 80ms linear;
-}
-
-.bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.panel {
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #243a5c;
-  background: #0d1729;
-  min-width: 0;
-}
-
-.panel h3 {
-  color: #94b5e4;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  margin-bottom: 8px;
-}
-
-.panel p {
-  font-size: 14px;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-}
-
-#lastOut {
-  color: #ff7777;
-}
-
-#remainingText {
-  color: #60d6ff;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-button {
-  border: 1px solid #438dff;
-  border-radius: 10px;
-  padding: 12px 22px;
-  background: linear-gradient(135deg, #1765e8, #123ba4);
-  color: white;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-button:active {
-  transform: scale(.97);
-}
-
-.footer {
-  text-align: center;
-  color: #5e7597;
-  font-size: 10px;
-  margin: 14px 0 6px;
-  letter-spacing: 1px;
-}
-
-.winner-screen {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  background: radial-gradient(circle, #18365e, #030711 75%);
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  padding: 20px;
-}
-
-.winner-screen.show {
-  display: flex;
-  animation: winnerIn .5s ease both;
-}
-
-@keyframes winnerIn {
-  from { opacity: 0; transform: scale(.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.trophy {
-  font-size: clamp(60px, 15vw, 110px);
-  filter: drop-shadow(0 0 25px #ffc400);
-}
-
-.winner-heading {
-  margin-top: 10px;
-  font-size: clamp(28px, 7vw, 55px);
-  color: #ffd35c;
-  font-weight: 1000;
-  text-shadow: 0 0 25px #ff9d00;
-}
-
-#winnerFlag {
-  font-size: clamp(65px, 17vw, 120px);
-  margin: 22px 0;
-}
-
-#winnerName {
-  font-size: clamp(24px, 6vw, 42px);
-  font-weight: 900;
-}
-
-.winner-screen button {
-  margin-top: 28px;
-}
-
-@media (min-width: 800px) {
-  .arena-wrap {
-    width: min(100%, 720px);
-  }
-}
-
-@media (max-width: 400px) {
-  .app { padding: 8px; }
-  .stat { padding: 10px 2px; }
-  .stat .label { font-size: 8px; }
-  .arena-tag { font-size: 8px; letter-spacing: 2px; }
-}
+:root{--cyan:#00eaff;--gold:#ffdc26;--panel:#080d2d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at center,#19116c,#060b27 58%,#02040d);color:white;font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-around;align-items:center;gap:7px;flex-wrap:wrap;padding:12px;background:#080d20;border-bottom:1px solid #1766a5}
+.live,.stat{padding:9px 12px;border:1px solid #256aff;border-radius:11px;background:#070c26;font-weight:bold}
+.live{color:#ff315b}
+h1{text-align:center;font-size:clamp(25px,5vw,42px);margin:18px 5px}
+h1 span{color:var(--gold)}
+.layout{display:grid;grid-template-columns:minmax(140px,1fr) minmax(250px,2fr) minmax(160px,1fr);gap:12px;padding:12px;max-width:1300px;margin:auto}
+.panel{background:linear-gradient(145deg,#080d2d,#120b38);border:2px solid #5832c5;border-radius:15px;padding:12px;min-width:0}
+.panel h2{font-size:15px;color:var(--cyan)}
+.cmd{background:#0b1640;border-radius:9px;padding:10px;margin:9px 0;font-size:12px;line-height:1.5}
+.cmd b{display:block;font-size:14px}
+.cyan{color:var(--cyan)}.green{color:#29ff9c}.red{color:#ff496b}
+.arena{width:100%;aspect-ratio:1;max-width:650px;margin:auto;position:relative;border:6px solid var(--cyan);border-radius:50%;overflow:hidden;background:radial-gradient(circle,#25205d 0 14%,#101b3b 15% 65%,#071127);box-shadow:0 0 20px var(--cyan),inset 0 0 35px #203fff;contain:layout paint}
+.arena:before{content:"";position:absolute;inset:5%;border:2px dashed #35caff;border-radius:50%;pointer-events:none}
+.rotatingStructure{position:absolute;inset:0;pointer-events:none;animation:spin 30s linear infinite;will-change:transform}
+@keyframes spin{to{transform:rotate(360deg)}}
+.obstacle{position:absolute;width:13%;height:1.7%;min-height:6px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);box-shadow:0 0 7px #967cff;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--a))}
+.core{position:absolute;left:50%;top:50%;width:27%;height:27%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:repeating-conic-gradient(#363b83 0deg 45deg,#28245f 45deg 90deg);box-shadow:0 0 15px #ffcf36;pointer-events:none}
+.centerLabel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;text-align:center;font-weight:bold;pointer-events:none;text-shadow:0 0 6px #f33}
+.flag{position:absolute;left:0;top:0;width:clamp(27px,4.5vw,43px);height:clamp(27px,4.5vw,43px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:2px solid #48dfff;box-shadow:0 0 5px #00bfff;font-size:clamp(18px,2.8vw,28px);transform:translate3d(0,0,0) translate(-50%,-50%);will-change:transform}
+.flag.out{opacity:.15;filter:grayscale(1);border-color:#ff2c66}
+.flag.shielded{border-color:#00ffbd;box-shadow:0 0 12px #00ffbd}
+.flag.shielded:after{content:"🛡️";position:absolute;font-size:12px;right:-7px;top:-7px}
+.notice{border:2px solid #ff20d4;border-radius:12px;padding:9px;margin-top:10px;text-align:center}
+.notice strong{color:#ff5de6;display:block;font-size:11px}
+.notice div{font-weight:bold;font-size:18px;overflow-wrap:anywhere}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.controls input,.controls select,.controls button{min-width:0;max-width:100%;padding:10px;border-radius:9px;border:1px solid #00bfff;background:#071331;color:white;font-size:13px}
+.controls input{flex:1}
+.controls button{font-weight:bold}
+.return{background:#075b43!important}.shield{background:#064e7c!important}.elim{background:#8e0e32!important}
+.flagstrip{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:12px;background:#050b22;border:1px solid #147aff;border-radius:12px}
+.mini{font-size:22px}.mini.out{opacity:.2;filter:grayscale(1)}
+.bottom{padding:12px;max-width:1200px;margin:auto}
+.hint{text-align:center;color:#a9caff;font-size:11px;padding:10px}
+#log{max-height:200px;overflow:auto;font-size:12px;line-height:1.5}
+.logline{padding:5px 0;border-bottom:1px solid #17264b}
+#winnerScreen{display:none;position:fixed;inset:0;z-index:9999;background:#020414f5;align-items:center;justify-content:center;text-align:center;padding:20px}
+#winnerScreen.show{display:flex}
+.winnerBox{width:min(600px,100%);padding:25px 15px;border:3px solid var(--gold);border-radius:22px;background:radial-gradient(circle,#25205e,#070b24)}
+#winnerFlag{font-size:70px}#winnerTitle{color:var(--gold);font-size:clamp(28px,8vw,54px)}
+.winnerBox button{padding:13px;border:0;border-radius:10px;background:var(--gold);font-weight:bold}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.layout .center{order:1}.layout .left{order:2}.layout .right{order:3}.arena{max-width:520px}header{justify-content:center}}
+@media(prefers-reduced-motion:reduce){.rotatingStructure{animation-duration:60s}}
 </style>
 </head>
-
 <body>
-<div class="app">
-  <header>
-    <h1>⚔️ FLAGS WAR ARENA</h1>
-    <p>AUTO BATTLE • LAST FLAG STANDING</p>
-  </header>
+<header>
+<div class="live">● LIVE ARENA</div>
+<div class="stat">COUNTRIES <span id="count">64</span></div>
+<div class="stat">REMAINING <span id="remaining">64</span></div>
+<div class="stat">SHIELDS <span id="shields">0</span></div>
+</header>
 
-  <section class="stats">
-    <div class="stat">
-      <div class="number" id="totalStat">64</div>
-      <div class="label">TOTAL FLAGS</div>
-    </div>
-    <div class="stat">
-      <div class="number" id="aliveStat">64</div>
-      <div class="label">ALIVE</div>
-    </div>
-    <div class="stat">
-      <div class="number" id="fpsStat">—</div>
-      <div class="label">FPS</div>
-    </div>
-  </section>
+<h1>WHERE ARE YOU <span>FROM?</span></h1>
 
-  <div class="arena-wrap" id="arenaWrap">
-    <canvas id="arena"></canvas>
-    <div class="arena-tag">SURVIVAL ARENA</div>
-  </div>
+<div class="layout">
+<section class="panel left">
+<h2>⚡ AUTOMATIC ELIMINATION</h2>
+<div class="cmd"><b class="red">🎯 CENTER ZONE</b>A country is automatically eliminated every 5 seconds.</div>
+<div class="cmd"><b class="green">🔄 RETURN / REVIVE</b>Bring an eliminated country back.</div>
+<div class="cmd"><b class="cyan">🛡️ SHIELD</b>Protect a country for 30 seconds.</div>
+<div class="notice"><strong>LAST ELIMINATED</strong><div id="lastOut">NONE YET</div></div>
+</section>
 
-  <section class="status">
-    <div class="status-title">AUTOMATIC ELIMINATION</div>
-    <div id="statusText">BATTLE STARTED!</div>
-    <div id="countdown">NEXT ELIMINATION: 4.0s</div>
-    <div class="progress">
-      <div id="progressBar"></div>
-    </div>
-  </section>
-
-  <section class="bottom">
-    <div class="panel">
-      <h3>LAST ELIMINATED</h3>
-      <p id="lastOut">NONE</p>
-    </div>
-    <div class="panel">
-      <h3>BATTLE STATUS</h3>
-      <p id="remainingText">64 FLAGS REMAIN</p>
-    </div>
-  </section>
-
-  <div class="actions">
-    <button id="resetButton">↻ RESTART BATTLE</button>
-  </div>
-
-  <div class="footer">
-    FLAGS WAR ARENA • AUTOMATIC MODE • 4 SECOND INTERVAL
-  </div>
+<section class="center">
+<div class="arena" id="arena">
+<div class="rotatingStructure" id="structure">
+<div class="obstacle" style="--x:42%;--y:20%;--a:78deg"></div>
+<div class="obstacle" style="--x:76%;--y:29%;--a:-45deg"></div>
+<div class="obstacle" style="--x:18%;--y:44%;--a:12deg"></div>
+<div class="obstacle" style="--x:82%;--y:60%;--a:12deg"></div>
+<div class="obstacle" style="--x:25%;--y:75%;--a:-48deg"></div>
+<div class="obstacle" style="--x:62%;--y:85%;--a:78deg"></div>
+</div>
+<div class="core"></div>
+<div class="centerLabel">ELIMINATION<br>ZONE</div>
 </div>
 
-<div class="winner-screen" id="winnerScreen">
-  <div class="trophy">🏆</div>
-  <div class="winner-heading">WINNER!</div>
-  <div id="winnerFlag">🏳️</div>
-  <div id="winnerName">COUNTRY</div>
-  <p style="color:#a7c2ed;margin-top:12px">LAST FLAG STANDING</p>
-  <button id="playAgain">PLAY AGAIN</button>
+<div class="notice"><strong>NEXT ACTION / STATUS</strong><div id="status">ARENA READY</div></div>
+
+<div class="controls">
+<select id="country" aria-label="Select country"></select>
+<button class="return" onclick="act('return')">🔄 Return</button>
+<button class="shield" onclick="act('shield')">🛡️ Shield 30s</button>
+</div>
+
+<div class="controls">
+<input id="command" placeholder="Return USA / Shield Japan" autocomplete="off">
+<button onclick="runCommand()">RUN</button>
+<button onclick="resetGame()">RESET</button>
+</div>
+
+<div class="notice"><strong>NEXT AUTOMATIC ELIMINATION</strong><div id="countdown">5s</div></div>
+</section>
+
+<section class="panel right">
+<h2>💬 SAVE YOUR COUNTRY</h2>
+<div class="cmd"><b class="cyan">🛡️ 5 CHATS — SHIELD</b>5 qualifying chats activate a 30-second shield.</div>
+<div class="cmd"><b class="green">🔄 10 CHATS — REVIVE</b>10 qualifying chats revive your country.</div>
+<h2>COMMAND LOG</h2>
+<div id="log"><div class="logline">System: Arena ready.</div></div>
+<div class="hint">Demo mode: YouTube Live Chat is not connected.</div>
+</section>
+</div>
+
+<div class="bottom">
+<div class="flagstrip" id="strip"></div>
+<div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo only — not connected to YouTube Live Chat</div>
+</div>
+
+<div id="winnerScreen" role="dialog" aria-modal="true">
+<div class="winnerBox">
+<div style="font-size:55px">🏆</div>
+<div id="winnerFlag">🇮🇳</div>
+<h2 id="winnerTitle">INDIA IS THE WINNER!</h2>
+<p id="winnerMessage">Congratulations!</p>
+<button onclick="resetGame()">🔄 PLAY AGAIN</button>
+</div>
 </div>
 
 <script>
-"use strict";
-
-const countryData = [
-  ["🇺🇸","United States"],["🇮🇳","India"],["🇧🇷","Brazil"],
-  ["🇬🇧","United Kingdom"],["🇯🇵","Japan"],["🇰🇷","South Korea"],
-  ["🇨🇳","China"],["🇷🇺","Russia"],["🇫🇷","France"],
-  ["🇩🇪","Germany"],["🇮🇹","Italy"],["🇪🇸","Spain"],
-  ["🇨🇦","Canada"],["🇦🇺","Australia"],["🇲🇽","Mexico"],
-  ["🇦🇷","Argentina"],["🇵🇹","Portugal"],["🇳🇱","Netherlands"],
-  ["🇸🇦","Saudi Arabia"],["🇹🇷","Turkey"],["🇮🇩","Indonesia"],
-  ["🇵🇰","Pakistan"],["🇧🇩","Bangladesh"],["🇳🇵","Nepal"],
-  ["🇱🇰","Sri Lanka"],["🇹🇭","Thailand"],["🇻🇳","Vietnam"],
-  ["🇵🇭","Philippines"],["🇲🇾","Malaysia"],["🇸🇬","Singapore"],
-  ["🇳🇿","New Zealand"],["🇿🇦","South Africa"],["🇳🇬","Nigeria"],
-  ["🇪🇬","Egypt"],["🇰🇪","Kenya"],["🇲🇦","Morocco"],
-  ["🇬🇷","Greece"],["🇸🇪","Sweden"],["🇳🇴","Norway"],
-  ["🇫🇮","Finland"],["🇩🇰","Denmark"],["🇨🇭","Switzerland"],
-  ["🇦🇹","Austria"],["🇧🇪","Belgium"],["🇵🇱","Poland"],
-  ["🇺🇦","Ukraine"],["🇮🇱","Israel"],["🇮🇷","Iran"],
-  ["🇮🇶","Iraq"],["🇦🇫","Afghanistan"],["🇨🇱","Chile"],
-  ["🇨🇴","Colombia"],["🇵🇪","Peru"],["🇨🇺","Cuba"],
-  ["🇯🇲","Jamaica"],["🇮🇪","Ireland"],["🇨🇿","Czechia"],
-  ["🇷🇴","Romania"],["🇭🇺","Hungary"],["🇶🇦","Qatar"],
-  ["🇦🇪","United Arab Emirates"],["🇰🇼","Kuwait"],
-  ["🇪🇹","Ethiopia"],["🇬🇭","Ghana"]
+const countryData=[
+["United States","🇺🇸"],["China","🇨🇳"],["India","🇮🇳"],["Brazil","🇧🇷"],
+["Canada","🇨🇦"],["Germany","🇩🇪"],["France","🇫🇷"],["Japan","🇯🇵"],
+["Australia","🇦🇺"],["Russia","🇷🇺"],["South Korea","🇰🇷"],["Italy","🇮🇹"],
+["United Kingdom","🇬🇧"],["Mexico","🇲🇽"],["Spain","🇪🇸"],["Turkey","🇹🇷"],
+["Saudi Arabia","🇸🇦"],["South Africa","🇿🇦"],["Argentina","🇦🇷"],["Norway","🇳🇴"],
+["Sweden","🇸🇪"],["Finland","🇫🇮"],["Denmark","🇩🇰"],["Netherlands","🇳🇱"],
+["Belgium","🇧🇪"],["Switzerland","🇨🇭"],["Austria","🇦🇹"],["Poland","🇵🇱"],
+["Ukraine","🇺🇦"],["Greece","🇬🇷"],["Portugal","🇵🇹"],["Ireland","🇮🇪"],
+["New Zealand","🇳🇿"],["Indonesia","🇮🇩"],["Pakistan","🇵🇰"],["Bangladesh","🇧🇩"],
+["Nepal","🇳🇵"],["Sri Lanka","🇱🇰"],["Thailand","🇹🇭"],["Vietnam","🇻🇳"],
+["Philippines","🇵🇭"],["Malaysia","🇲🇾"],["Singapore","🇸🇬"],["Egypt","🇪🇬"],
+["Nigeria","🇳🇬"],["Kenya","🇰🇪"],["Morocco","🇲🇦"],["Algeria","🇩🇿"],
+["Israel","🇮🇱"],["United Arab Emirates","🇦🇪"],["Qatar","🇶🇦"],["Iran","🇮🇷"],
+["Iraq","🇮🇶"],["Chile","🇨🇱"],["Colombia","🇨🇴"],["Peru","🇵🇪"],
+["Venezuela","🇻🇪"],["Cuba","🇨🇺"],["Jamaica","🇯🇲"],["Iceland","🇮🇸"],
+["Romania","🇷🇴"],["Czechia","🇨🇿"],["Hungary","🇭🇺"],["Croatia","🇭🇷"]
 ];
 
-const canvas = document.getElementById("arena");
-const ctx = canvas.getContext("2d", { alpha: false });
-const wrap = document.getElementById("arenaWrap");
+const arena=document.getElementById("arena");
+const select=document.getElementById("country");
+const strip=document.getElementById("strip");
+const logBox=document.getElementById("log");
+const $=id=>document.getElementById(id);
+let gameOver=false,physicsReady=false,lastTime=0,elapsed=0;
+const BALL_SPEED=.34;
+const BALL_MIN=.30;
+const BALL_MAX=.52;
+const SPIN_RATE=2*Math.PI/30000;
+let W=0,H=0,cx=0,cy=0,boundary=0,radius=15;
+const sticks=[
+{x:.42,y:.20,a:78},{x:.76,y:.29,a:-45},{x:.18,y:.44,a:12},
+{x:.82,y:.60,a:12},{x:.25,y:.75,a:-48},{x:.62,y:.85,a:78}
+];
+const countries=countryData.map(([name,flag],id)=>({
+name,flag,id,out:false,shieldUntil:0,x:0,y:0,vx:0,vy:0,el:null,mini:null
+}));
 
-const totalStat = document.getElementById("totalStat");
-const aliveStat = document.getElementById("aliveStat");
-const fpsStat = document.getElementById("fpsStat");
-const statusText = document.getElementById("statusText");
-const countdown = document.getElementById("countdown");
-const progressBar = document.getElementById("progressBar");
-const lastOut = document.getElementById("lastOut");
-const remainingText = document.getElementById("remainingText");
-const winnerScreen = document.getElementById("winnerScreen");
-
-const ELIMINATION_MS = 4000;
-const FLAG_RADIUS = 15;
-
-let width = 0;
-let height = 0;
-let dpr = 1;
-let centerX = 0;
-let centerY = 0;
-let arenaRadius = 0;
-
-let countries = [];
-let lastFrameTime = 0;
-let lastFpsTime = 0;
-let frameCounter = 0;
-let currentFps = 0;
-let nextEliminationTime = 0;
-let gameOver = false;
-let audioContext = null;
-let lastAnnouncement = "";
-let animationId = null;
-
-function resizeCanvas() {
-  const rect = wrap.getBoundingClientRect();
-  dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  width = rect.width;
-  height = rect.height;
-
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  centerX = width / 2;
-  centerY = height / 2;
-  arenaRadius = Math.min(width, height) * 0.455;
-
-  if (countries.length) {
-    countries.forEach(c => {
-      const dx = c.x - centerX;
-      const dy = c.y - centerY;
-      const dist = Math.hypot(dx, dy);
-
-      if (dist > arenaRadius - FLAG_RADIUS) {
-        const scale = (arenaRadius - FLAG_RADIUS) / (dist || 1);
-        c.x = centerX + dx * scale;
-        c.y = centerY + dy * scale;
-      }
-    });
-  }
+function measure(){
+W=arena.clientWidth;H=arena.clientHeight;
+cx=W/2;cy=H/2;boundary=Math.min(W,H)*.44;
+radius=Math.max(12,Math.min(18,W*.027));
 }
 
-function createCountries() {
-  countries = countryData.map((data, index) => {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = Math.sqrt(Math.random()) * arenaRadius * 0.77;
-    const speed = 35 + Math.random() * 65;
-
-    return {
-      id: index,
-      flag: data[0],
-      name: data[1],
-      x: centerX + Math.cos(angle) * radius,
-      y: centerY + Math.sin(angle) * radius,
-      vx: Math.cos(angle + Math.PI / 2) * speed,
-      vy: Math.sin(angle + Math.PI / 2) * speed,
-      alive: true,
-      size: FLAG_RADIUS + Math.random() * 1.5,
-      spin: (Math.random() - 0.5) * 1.5,
-      rotation: Math.random() * Math.PI * 2,
-      pulse: Math.random() * Math.PI * 2
-    };
-  });
+function log(message){
+const row=document.createElement("div");
+row.className="logline";
+row.textContent=new Date().toLocaleTimeString()+" — "+message;
+logBox.prepend(row);
+while(logBox.children.length>50)logBox.lastElementChild.remove();
 }
 
-function playEliminationSound() {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-
-    if (!audioContext) audioContext = new AudioCtx();
-    if (audioContext.state === "suspended") audioContext.resume();
-
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-
-    oscillator.type = "triangle";
-    oscillator.frequency.setValueAtTime(520, audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(
-      150, audioContext.currentTime + 0.22
-    );
-
-    gain.gain.setValueAtTime(0.14, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.001, audioContext.currentTime + 0.24
-    );
-
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.25);
-  } catch (error) {
-    // Sound may be blocked until the user interacts with the page.
-  }
+function update(){
+let remaining=0,shields=0;
+const now=Date.now();
+for(const c of countries){
+if(!c.out)remaining++;
+if(c.shieldUntil>now)shields++;
+c.el.classList.toggle("out",c.out);
+c.el.classList.toggle("shielded",c.shieldUntil>now);
+c.mini.classList.toggle("out",c.out);
+}
+$("count").textContent=countries.length;
+$("remaining").textContent=remaining;
+$("shields").textContent=shields;
 }
 
-function announce(text) {
-  if (!("speechSynthesis" in window)) return;
-
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 1.05;
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
-    window.speechSynthesis.speak(utterance);
-  } catch (error) {}
+function placeBall(c){
+c.el.style.transform=`translate3d(${c.x}px,${c.y}px,0) translate(-50%,-50%)`;
 }
 
-function drawArena() {
-  ctx.clearRect(0, 0, width, height);
-
-  const background = ctx.createRadialGradient(
-    centerX, centerY, 0,
-    centerX, centerY, arenaRadius * 1.4
-  );
-  background.addColorStop(0, "#172d4e");
-  background.addColorStop(0.7, "#0a1529");
-  background.addColorStop(1, "#050a14");
-
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, width, height);
-
-  // Arena rings
-  ctx.save();
-  ctx.translate(centerX, centerY);
-
-  for (let i = 1; i <= 5; i++) {
-    ctx.beginPath();
-    ctx.arc(0, 0, arenaRadius * i / 5, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(64, 150, 255, ${0.07 + i * 0.018})`;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  ctx.restore();
-
-  // Subtle moving light streaks
-  const t = performance.now() * 0.00012;
-  ctx.save();
-  ctx.translate(centerX, centerY);
-  ctx.rotate(t);
-
-  ctx.beginPath();
-  ctx.arc(0, 0, arenaRadius * 0.96, -0.6, 0.6);
-  ctx.strokeStyle = "rgba(36, 147, 255, 0.25)";
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  ctx.restore();
-
-  // Draw flags
-  for (const c of countries) {
-    if (!c.alive) continue;
-
-    const pulse = 1 + Math.sin(c.pulse) * 0.035;
-    const r = c.size * pulse;
-
-    ctx.save();
-    ctx.translate(c.x, c.y);
-    ctx.rotate(c.rotation);
-
-    // Shadow
-    ctx.beginPath();
-    ctx.arc(0, 2, r + 3, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.36)";
-    ctx.fill();
-
-    // Outer glow
-    ctx.beginPath();
-    ctx.arc(0, 0, r + 2, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(43, 139, 255, 0.24)";
-    ctx.fill();
-
-    // Flag circle background
-    ctx.beginPath();
-    ctx.arc(0, 0, r + 0.5, 0, Math.PI * 2);
-    ctx.fillStyle = "#eaf3ff";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.clip();
-
-    ctx.font = `${r * 1.65}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(c.flag, 0, 1);
-
-    ctx.restore();
-  }
+function initialise(){
+measure();
+const active=countries.filter(c=>!c.out);
+const maxR=boundary*.72;
+active.forEach((c,i)=>{
+const angle=i*2.399963229728653;
+const r=maxR*Math.sqrt((i+.5)/active.length);
+c.x=cx+Math.cos(angle)*r;
+c.y=cy+Math.sin(angle)*r;
+const a=angle+2.1;
+c.vx=Math.cos(a)*BALL_SPEED;
+c.vy=Math.sin(a)*BALL_SPEED;
+placeBall(c);
+});
+physicsReady=true;
 }
 
-function updatePhysics(dt) {
-  const alive = countries.filter(c => c.alive);
-  const substeps = dt > 0.025 ? 2 : 1;
-  const step = dt / substeps;
-
-  for (let s = 0; s < substeps; s++) {
-    for (const c of alive) {
-      c.x += c.vx * step;
-      c.y += c.vy * step;
-      c.rotation += c.spin * step;
-      c.pulse += step * 3;
-
-      const dx = c.x - centerX;
-      const dy = c.y - centerY;
-      const distance = Math.hypot(dx, dy);
-      const limit = arenaRadius - c.size - 2;
-
-      // Bounce smoothly off circular arena wall
-      if (distance > limit) {
-        const nx = dx / (distance || 1);
-        const ny = dy / (distance || 1);
-
-        c.x = centerX + nx * limit;
-        c.y = centerY + ny * limit;
-
-        const dot = c.vx * nx + c.vy * ny;
-        c.vx -= 2 * dot * nx;
-        c.vy -= 2 * dot * ny;
-
-        c.vx *= 0.99;
-        c.vy *= 0.99;
-      }
-    }
-
-    // Flag-to-flag collisions
-    for (let i = 0; i < alive.length; i++) {
-      const a = alive[i];
-
-      for (let j = i + 1; j < alive.length; j++) {
-        const b = alive[j];
-
-        let dx = b.x - a.x;
-        let dy = b.y - a.y;
-        let distance = Math.hypot(dx, dy);
-        const minDistance = a.size + b.size + 1;
-
-        if (distance < minDistance) {
-          if (distance < 0.001) {
-            dx = (Math.random() - 0.5) * 0.1;
-            dy = (Math.random() - 0.5) * 0.1;
-            distance = Math.hypot(dx, dy);
-          }
-
-          const nx = dx / distance;
-          const ny = dy / distance;
-          const overlap = minDistance - distance;
-
-          // Separate overlapping flags
-          a.x -= nx * overlap * 0.5;
-          a.y -= ny * overlap * 0.5;
-          b.x += nx * overlap * 0.5;
-          b.y += ny * overlap * 0.5;
-
-          const relativeVelocity =
-            (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-
-          if (relativeVelocity < 0) {
-            const impulse = -relativeVelocity * 0.92;
-
-            a.vx -= impulse * nx;
-            a.vy -= impulse * ny;
-            b.vx += impulse * nx;
-            b.vy += impulse * ny;
-          }
-        }
-      }
-    }
-  }
-
-  // Gentle speed correction prevents the arena from freezing.
-  for (const c of alive) {
-    const speed = Math.hypot(c.vx, c.vy);
-    const minSpeed = 38;
-    const maxSpeed = 105;
-
-    if (speed < minSpeed) {
-      const scale = minSpeed / (speed || 1);
-      c.vx *= scale;
-      c.vy *= scale;
-    } else if (speed > maxSpeed) {
-      const scale = maxSpeed / speed;
-      c.vx *= scale;
-      c.vy *= scale;
-    }
-  }
+function getSticks(angle){
+const cs=Math.cos(angle),sn=Math.sin(angle);
+const half=W*.052;
+return sticks.map(st=>{
+const bx=(st.x-.5)*W,by=(st.y-.5)*H;
+const x=cx+bx*cs-by*sn,y=cy+bx*sn+by*cs;
+const a=st.a*Math.PI/180+angle;
+return{x1:x-Math.cos(a)*half,y1:y-Math.sin(a)*half,
+x2:x+Math.cos(a)*half,y2:y+Math.sin(a)*half,
+x,y,vx:-(y-cy)*SPIN_RATE,vy:(x-cx)*SPIN_RATE};
+});
 }
 
-function updateStats() {
-  const alive = countries.filter(c => c.alive);
-  totalStat.textContent = countries.length;
-  aliveStat.textContent = alive.length;
-  remainingText.textContent = `${alive.length} FLAGS REMAIN`;
+function reflect(c,nx,ny,svx=0,svy=0){
+const rvx=c.vx-svx,rvy=c.vy-svy;
+const dot=rvx*nx+rvy*ny;
+if(dot<0){
+c.vx-=1.8*dot*nx;
+c.vy-=1.8*dot*ny;
+}
 }
 
-function eliminateOne() {
-  if (gameOver) return;
-
-  const alive = countries.filter(c => c.alive);
-
-  if (alive.length <= 1) {
-    finishGame();
-    return;
-  }
-
-  // Select one random surviving flag
-  const selected = alive[Math.floor(Math.random() * alive.length)];
-  selected.alive = false;
-
-  lastOut.textContent = `${selected.flag} ${selected.name.toUpperCase()}`;
-  statusText.textContent = `${selected.name.toUpperCase()} ELIMINATED`;
-  statusText.style.color = "#ff7777";
-
-  playEliminationSound();
-  announce(`${selected.name} is out`);
-
-  updateStats();
-
-  const survivors = countries.filter(c => c.alive);
-  if (survivors.length === 1) {
-    finishGame();
-  }
+function collideStick(c,s){
+const sx=s.x2-s.x1,sy=s.y2-s.y1;
+const len2=sx*sx+sy*sy||1;
+const t=Math.max(0,Math.min(1,((c.x-s.x1)*sx+(c.y-s.y1)*sy)/len2));
+const qx=s.x1+t*sx,qy=s.y1+t*sy;
+let dx=c.x-qx,dy=c.y-qy;
+let d=Math.hypot(dx,dy);
+const minD=radius+3;
+if(d>=minD)return;
+if(d<.001){d=1;dx=-sy/Math.sqrt(len2);dy=sx/Math.sqrt(len2);}
+const nx=dx/d,ny=dy/d;
+c.x=qx+nx*(minD+.5);c.y=qy+ny*(minD+.5);
+reflect(c,nx,ny,s.vx,s.vy);
+c.vx+=nx*.018;c.vy+=ny*.018;
 }
 
-function finishGame() {
-  if (gameOver) return;
-  gameOver = true;
-
-  const winner = countries.find(c => c.alive);
-
-  statusText.textContent = "BATTLE COMPLETE!";
-  countdown.textContent = "THE LAST FLAG IS THE WINNER";
-  progressBar.style.width = "0%";
-
-  if (winner) {
-    document.getElementById("winnerFlag").textContent = winner.flag;
-    document.getElementById("winnerName").textContent =
-      winner.name.toUpperCase();
-
-    winnerScreen.classList.add("show");
-    announce(`The winner is ${winner.name}!`);
-  }
+function collideBalls(active){
+const minD=radius*1.65;
+for(let i=0;i<active.length;i++){
+for(let j=i+1;j<active.length;j++){
+const a=active[i],b=active[j];
+let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+if(d>=minD)continue;
+if(d<.001){dx=.01;dy=.01;d=Math.hypot(dx,dy);}
+const nx=dx/d,ny=dy/d;
+const overlap=(minD-d)/2+.2;
+a.x-=nx*overlap;a.y-=ny*overlap;
+b.x+=nx*overlap;b.y+=ny*overlap;
+const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+if(rel>0){
+a.vx-=rel*.9*nx;a.vy-=rel*.9*ny;
+b.vx+=rel*.9*nx;b.vy+=rel*.9*ny;
+}
+}
+}
 }
 
-function resetGame() {
-  if (animationId) cancelAnimationFrame(animationId);
+function animate(ts){
+if(!W||!H)measure();
+if(!physicsReady)initialise();
+const dt=Math.min((ts-(lastTime||ts))/16.667,1.5);
+lastTime=ts;
+elapsed+=dt*16.667;
+const angle=elapsed*SPIN_RATE;
+const active=countries.filter(c=>!c.out);
+const activeSticks=getSticks(angle);
+const steps=2,step=dt/steps;
 
-  winnerScreen.classList.remove("show");
-  gameOver = false;
-  lastAnnouncement = "";
-
-  resizeCanvas();
-  createCountries();
-
-  lastOut.textContent = "NONE";
-  statusText.textContent = "BATTLE STARTED!";
-  statusText.style.color = "#ffcf5a";
-  countdown.textContent = "NEXT ELIMINATION: 4.0s";
-  progressBar.style.width = "100%";
-
-  lastFrameTime = 0;
-  lastFpsTime = performance.now();
-  frameCounter = 0;
-  currentFps = 0;
-
-  nextEliminationTime = performance.now() + ELIMINATION_MS;
-  updateStats();
-
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  animationId = requestAnimationFrame(gameLoop);
+for(let sub=0;sub<steps;sub++){
+for(const c of active){
+c.x+=c.vx*step;c.y+=c.vy*step;
+let dx=c.x-cx,dy=c.y-cy,d=Math.hypot(dx,dy)||1;
+if(d>boundary-radius){
+const nx=dx/d,ny=dy/d;
+c.x=cx+nx*(boundary-radius);c.y=cy+ny*(boundary-radius);
+reflect(c,-nx,-ny);
+}
+for(const s of activeSticks)collideStick(c,s);
+}
+collideBalls(active);
 }
 
-function gameLoop(timestamp) {
-  if (gameOver) {
-    drawArena();
-    animationId = null;
-    return;
-  }
-
-  if (!lastFrameTime) {
-    lastFrameTime = timestamp;
-    lastFpsTime = timestamp;
-  }
-
-  const dt = Math.min((timestamp - lastFrameTime) / 1000, 0.035);
-  lastFrameTime = timestamp;
-
-  frameCounter++;
-
-  if (timestamp - lastFpsTime >= 500) {
-    currentFps = Math.round(
-      frameCounter * 1000 / (timestamp - lastFpsTime)
-    );
-    fpsStat.textContent = currentFps;
-    frameCounter = 0;
-    lastFpsTime = timestamp;
-  }
-
-  updatePhysics(dt);
-  drawArena();
-
-  const remainingMs = Math.max(0, nextEliminationTime - timestamp);
-  const remainingSeconds = remainingMs / 1000;
-
-  countdown.textContent =
-    `NEXT ELIMINATION: ${remainingSeconds.toFixed(1)}s`;
-
-  progressBar.style.width =
-    `${Math.max(0, Math.min(100, remainingMs / ELIMINATION_MS * 100))}%`;
-
-  if (timestamp >= nextEliminationTime) {
-    eliminateOne();
-
-    // Schedule the next elimination four seconds later.
-    nextEliminationTime = timestamp + ELIMINATION_MS;
-  }
-
-  if (!gameOver) {
-    animationId = requestAnimationFrame(gameLoop);
-  } else {
-    animationId = null;
-  }
+for(const c of active){
+let speed=Math.hypot(c.vx,c.vy);
+if(!Number.isFinite(speed)||speed<.12){
+const a=(c.id+1)*2.399963229728653+elapsed*.0001;
+c.vx=Math.cos(a)*BALL_MIN;c.vy=Math.sin(a)*BALL_MIN;
+speed=BALL_MIN;
+}
+if(speed<BALL_MIN){c.vx*=BALL_MIN/speed;c.vy*=BALL_MIN/speed;}
+if(speed>BALL_MAX){c.vx*=BALL_MAX/speed;c.vy*=BALL_MAX/speed;}
+placeBall(c);
+}
+requestAnimationFrame(animate);
 }
 
-document.getElementById("resetButton").addEventListener("click", resetGame);
-document.getElementById("playAgain").addEventListener("click", resetGame);
+function beep(freq=600){
+try{
+const ctx=new(window.AudioContext||window.webkitAudioContext)();
+const osc=ctx.createOscillator(),gain=ctx.createGain();
+osc.frequency.value=freq;gain.gain.value=.04;
+osc.connect(gain);gain.connect(ctx.destination);
+osc.start();osc.stop(ctx.currentTime+.12);
+osc.onended=()=>ctx.close();
+}catch(e){}
+}
 
-window.addEventListener("resize", resizeCanvas, { passive: true });
+function speakWinner(c){
+if(!("speechSynthesis"in window))return;
+speechSynthesis.cancel();
+const utter=new SpeechSynthesisUtterance(c.name+" is the winner!");
+utter.lang="en-US";utter.rate=.9;
+speechSynthesis.speak(utter);
+}
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    lastFrameTime = 0;
-  }
+function checkWinner(){
+const active=countries.filter(c=>!c.out);
+if(active.length===1&&!gameOver){
+gameOver=true;
+$("winnerFlag").textContent=active[0].flag;
+$("winnerTitle").textContent=active[0].name.toUpperCase()+" IS THE WINNER!";
+$("winnerMessage").textContent="Congratulations, "+active[0].name+"!";
+$("winnerScreen").classList.add("show");
+$("status").textContent=active[0].name.toUpperCase()+" WINS!";
+log("🏆 "+active[0].name+" IS THE WINNER!");
+beep(900);speakWinner(active[0]);
+}
+if(active.length===0&&!gameOver){
+gameOver=true;
+$("winnerFlag").textContent="⚔️";
+$("winnerTitle").textContent="NO WINNER!";
+$("winnerMessage").textContent="All countries have been eliminated.";
+$("winnerScreen").classList.add("show");
+}
+}
+
+function act(action){
+if(gameOver)return;
+const c=countries.find(c=>c.name===select.value);
+if(!c)return;
+if(action==="return"){
+if(!c.out){log(c.name+" is already in the arena.");return;}
+c.out=false;
+const a=Math.random()*Math.PI*2,r=boundary*.45;
+c.x=cx+Math.cos(a)*r;c.y=cy+Math.sin(a)*r;
+const v=BALL_SPEED;
+c.vx=Math.cos(a+1.7)*v;c.vy=Math.sin(a+1.7)*v;
+$("status").textContent=c.name.toUpperCase()+" RETURNED";
+log("🔄 Returned "+c.name);
+}
+if(action==="shield"){
+c.shieldUntil=Date.now()+30000;
+$("status").textContent=c.name.toUpperCase()+" SHIELDED · 30s";
+log("🛡️ Shield activated for "+c.name);
+}
+update();checkWinner();beep(750);
+}
+
+function runCommand(){
+const input=$("command"),v=input.value.trim();
+if(!v)return;
+const m=v.match(/^(return|revive|shield)\s+(.+)$/i);
+if(!m){log("Use Return USA / Revive India / Shield Japan.");input.value="";return;}
+const action=m[1].toLowerCase()==="revive"?"return":m[1].toLowerCase();
+const name=m[2].toLowerCase();
+const c=countries.find(c=>c.name.toLowerCase()===name||
+(name==="usa"&&c.name==="United States")||
+(name==="uk"&&c.name==="United Kingdom"));
+if(!c){log("Country not found: "+m[2]);input.value="";return;}
+select.value=c.name;act(action);input.value="";
+}
+
+function resetGame(){
+gameOver=false;
+if("speechSynthesis"in window)speechSynthesis.cancel();
+$("winnerScreen").classList.remove("show");
+for(const c of countries){c.out=false;c.shieldUntil=0;}
+$("lastOut").textContent="NONE YET";
+$("status").textContent="ARENA RESET";
+logBox.innerHTML="";
+physicsReady=false;lastTime=0;elapsed=0;
+update();log("Game reset. All flags returned.");
+}
+
+countries.forEach((c,i)=>{
+const option=document.createElement("option");
+option.value=c.name;option.textContent=c.flag+" "+c.name;
+select.appendChild(option);
+
+const el=document.createElement("div");
+el.className="flag";el.textContent=c.flag;el.title=c.name;
+el.id="flag"+i;arena.appendChild(el);c.el=el;
+
+const mini=document.createElement("span");
+mini.className="mini";mini.textContent=c.flag;mini.title=c.name;
+mini.id="mini"+i;strip.appendChild(mini);c.mini=mini;
 });
 
-// Start automatically
-resizeCanvas();
-createCountries();
-updateStats();
-nextEliminationTime = performance.now() + ELIMINATION_MS;
-animationId = requestAnimationFrame(gameLoop);
+$("command").addEventListener("keydown",e=>{if(e.key==="Enter")runCommand();});
+window.addEventListener("resize",()=>{measure();physicsReady=false;lastTime=0;});
+document.addEventListener("visibilitychange",()=>{lastTime=0;});
+let countdown=5;
+setInterval(()=>{
+if(gameOver)return;
+countdown--;
+if(countdown<=0){
+const active=countries.filter(c=>!c.out);
+if(active.length>1){
+const eligible=active.filter(c=>c.shieldUntil<=Date.now());
+if(eligible.length){
+const target=eligible.reduce((a,b)=>
+Math.hypot(a.x-cx,a.y-cy)<Math.hypot(b.x-cx,b.y-cy)?a:b);
+target.out=true;
+$("lastOut").textContent=target.flag+" "+target.name.toUpperCase();
+$("status").textContent=target.name.toUpperCase()+" ELIMINATED";
+log("⚡ Automatic elimination: "+target.name);
+beep(180);update();checkWinner();
+}
+}
+countdown=5;
+}
+$("countdown").textContent=countdown+"s";
+},1000);
+
+measure();update();requestAnimationFrame(animate);
 </script>
 </body>
 </html>
