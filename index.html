@@ -557,7 +557,9 @@ h1 span{color:var(--gold)}
     <button onclick="resetGame()">🔄 PLAY AGAIN</button>
   </div>
 </div>
-
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script>
 const countryData=[
 ["United States","🇺🇸"],["China","🇨🇳"],["India","🇮🇳"],["Brazil","🇧🇷"],
@@ -1175,8 +1177,63 @@ function animateArena(ts){
 document.addEventListener("visibilitychange",()=>{
   lastFrame=0;
 });
+// ===== FIREBASE REMOTE CONNECTION =====
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD9KdftdGPf8ZErfBcqimAdXvp-rEd49Mw",
+  authDomain: "flags-war-arena-8609d.firebaseapp.com",
+  databaseURL: "https://flags-war-arena-8609d-default-rtdb.firebaseio.com",
+  projectId: "flags-war-arena-8609d",
+  storageBucket: "flags-war-arena-8609d.firebasestorage.app",
+  messagingSenderId: "419617146899",
+  appId: "1:419617146899:web:924e36cce4ec398ec517e6",
+  measurementId: "G-YLBGB5EVQH"
+};
+
+function connectFirebaseRemote() {
+  firebase.initializeApp(firebaseConfig);
+
+  firebase.auth().signInAnonymously()
+    .then(() => {
+      log("Firebase connected. Remote control ready.");
+
+      firebase.database().ref("arenaCommands")
+        .on("child_added", snapshot => {
+
+          const command = snapshot.val();
+
+          if (!command ||
+              !["return", "shield"].includes(command.action) ||
+              typeof command.country !== "string") {
+            snapshot.ref.remove();
+            return;
+          }
+
+          if (command.createdAt < window.gameSessionStartedAt) {
+            snapshot.ref.remove();
+            return;
+          }
+
+          const country = findCountry(command.country);
+
+          if (country && !gameOver) {
+            select.value = country.name;
+            act(command.action);
+            log("REMOTE: " + command.action.toUpperCase() + " " + country.name);
+          }
+
+          snapshot.ref.remove();
+        });
+    })
+    .catch(error => log("Firebase error: " + error.message));
+}
+
+window.gameSessionStartedAt = Date.now();
+
+// ===== END FIREBASE CONNECTION =====
 makeCountries();
+connectFirebaseRemote();
 requestAnimationFrame(animateArena);
 
 setInterval(()=>{
