@@ -613,18 +613,31 @@ function log(message){
 
 function beep(freq=600){
   try{
-    const AudioCtx=window.AudioContext||window.webkitAudioContext;
-    if(!AudioCtx)return;
-    const ctx=new AudioCtx();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.frequency.value=freq;
-    gain.gain.value=.05;
+    const ctx = getArenaAudio();
+    if(!ctx) return;
+
+    if(ctx.state === "suspended") ctx.resume();
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, now);
+
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime+.12);
-    osc.onended=()=>ctx.close();
+
+    osc.start(now);
+    osc.stop(now + 0.12);
+
+    osc.onended = () => {
+      osc.disconnect();
+      gain.disconnect();
+    };
   }catch(e){}
 }
 // ===== ANNOUNCER + ELIMINATION SOUND =====
