@@ -627,7 +627,78 @@ function beep(freq=600){
     osc.onended=()=>ctx.close();
   }catch(e){}
 }
+// ===== ANNOUNCER + ELIMINATION SOUND =====
+let arenaAudioContext = null;
+let speechQueue = [];
 
+function getArenaAudio(){
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if(!AudioCtx) return null;
+  if(!arenaAudioContext) arenaAudioContext = new AudioCtx();
+  if(arenaAudioContext.state === "suspended") arenaAudioContext.resume();
+  return arenaAudioContext;
+}
+
+function unlockArenaAudio(){
+  const ctx = getArenaAudio();
+  if(ctx) ctx.resume();
+}
+
+document.addEventListener("pointerdown", unlockArenaAudio, {once:true});
+
+function playEliminationSound(){
+  try{
+    const ctx = getArenaAudio();
+    if(!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(45, now + 0.3);
+
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  }catch(e){}
+}
+
+function announceEvent(country, type){
+  if(!("speechSynthesis" in window) || !country) return;
+
+  let name = country.name;
+  if(name === "United States") name = "USA";
+  if(name === "United Kingdom") name = "UK";
+
+  const phrases = {
+    out: name + " is OUT!",
+    shield: name + " Shielded!",
+    revived: name + " Revived!",
+    winner: name + " is the Winner!"
+  };
+
+  if(!phrases[type]) return;
+
+  const msg = new SpeechSynthesisUtterance(phrases[type]);
+  msg.lang = "en-US";
+  msg.rate = 0.92;
+  msg.volume = 1;
+  speechQueue.push(msg);
+  speakNextEvent();
+}
+
+function speakNextEvent(){
+  if(!speechQueue.length || speechSynthesis.speaking) return;
+  const msg = speechQueue.shift();
+  msg.onend = speakNextEvent;
+  msg.onerror = speakNextEvent;
+  speechSynthesis.speak(msg);
+}
 function speakWinner(country){
   if(!("speechSynthesis" in window))return;
   window.speechSynthesis.cancel();
@@ -772,6 +843,7 @@ function act(action){
       c.name.toUpperCase()+" RETURNED";
     log("🔄 Returned "+c.name);
     beep(750);
+    announceEvent(c, "revived");
   }
 
   if(action==="shield"){
@@ -785,6 +857,7 @@ function act(action){
       c.name.toUpperCase()+" SHIELDED · 30s";
     log("🛡️ Shield activated for "+c.name+" (30 seconds)");
     beep(900);
+    announceEvent(c, "shield");
   }
 
   update();
@@ -913,7 +986,8 @@ function automaticElimination(){
     target.name.toUpperCase()+" ELIMINATED";
 
   log("⚡ Automatic elimination: "+target.name);
-  beep(180);
+  playEliminationSound();
+announceEvent(target, "out");
   update();
   checkWinner();
 }
