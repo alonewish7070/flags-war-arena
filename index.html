@@ -5,87 +5,89 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Where Are You From? — Flags War Arena</title>
 <style>
-:root{--cyan:#00eaff;--pink:#ff20d4;--blue:#1720a8;--panel:#050d2b;--gold:#ffdc26}
+:root{--cyan:#27e6ff;--gold:#ffc928;--pink:#ff20d4}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:radial-gradient(ellipse at center,#19116c 0%,#060b27 58%,#02040d 100%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
-header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;flex-wrap:wrap;background:linear-gradient(90deg,#07101e,#111a35,#07101e);border-bottom:1px solid #1b5a8b}
-.live{background:#ff123c;padding:9px 13px;border-radius:10px;font-weight:900;box-shadow:0 0 12px #ff123c}
-.stat{border:1px solid #256aff;border-radius:12px;padding:8px 12px;background:#070c26;font-weight:bold}
-h1{text-align:center;font-size:clamp(25px,5vw,48px);line-height:.95;margin:8px 0 16px;text-shadow:0 0 15px #00cfff}
-h1 span{color:var(--gold)}
-.layout{display:grid;grid-template-columns:minmax(150px,1fr) minmax(260px,2fr) minmax(180px,1fr);gap:12px;padding:12px;max-width:1400px;margin:auto;position:relative}
-.panel{background:linear-gradient(145deg,#080d2d,#120b38);border:2px solid #7c25ff;border-radius:18px;padding:13px;box-shadow:0 0 15px #3a14a0}
-.panel h2{font-size:16px;color:var(--cyan);margin:0 0 10px}
-.cmd{padding:10px;border-radius:10px;margin:8px 0;background:#0b1640;font-size:13px;line-height:1.5}
-.cmd b{display:block;font-size:15px}
-.red{color:#ff3e60}.green{color:#29ff9c}.cyan{color:var(--cyan)}
-.arena{aspect-ratio:1;border:7px solid var(--cyan);border-radius:50%;position:relative;max-width:760px;width:100%;margin:auto;background:radial-gradient(circle at 50% 50%,#28205f 0 13%,#101b3b 14% 65%,#071127 100%);box-shadow:0 0 22px var(--cyan),inset 0 0 20px #203fff}
-.arena:before{content:"";position:absolute;inset:5%;border:2px dashed #35caff;border-radius:50%;opacity:.7;pointer-events:none}
+body{margin:0;min-height:100vh;color:#fff;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 0% 30%,rgba(255,40,60,.35),transparent 45%),radial-gradient(circle at 100% 35%,rgba(40,90,255,.4),transparent 45%),#050818}
+.app{max-width:520px;margin:auto;padding:6px 8px 20px}
+.topbar{display:flex;align-items:center;gap:6px}
+.brand{flex:1;font-weight:900;font-size:clamp(15px,4.6vw,22px);line-height:1;letter-spacing:.5px}
+.brand span{color:var(--gold)}
+.box{width:25%;text-align:center;border:1px solid #2a4a9a;border-radius:10px;background:rgba(7,12,38,.85);padding:3px 0 4px}
+.box small{display:block;font-size:8px;color:#9bb7ff;letter-spacing:1px}
+.box b{font-size:clamp(22px,7vw,32px)}
+.box.gold b{color:var(--gold)}
+.ring{--p:360deg;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) var(--p),#26264f 0)}
+.ring b{width:36px;height:36px;border-radius:50%;background:#070b24;display:grid;place-items:center;font-size:20px}
+.hud{display:grid;grid-template-columns:26% 1fr 29%;gap:5px;margin-top:8px;align-items:center}
+.side{border:2px solid var(--cyan);border-radius:8px;background:rgba(5,13,43,.92);padding:5px 6px;font-size:9px;line-height:1.35;min-height:84px}
+.side h3{margin:0 0 4px;font-size:10px;text-align:center;color:var(--gold)}
+.side.save{border-color:#35ffbd}
+.side.save h3{color:#35ffbd}
+.side i{font-style:normal;color:#ff4d6d;font-size:8px}
+.side .row{display:flex;justify-content:space-between;gap:4px;margin:3px 0;font-weight:bold}
+.sh{color:#29ff9c}.rv{color:#ff5de6}
+#log{max-height:62px;overflow:hidden;font-size:8px;line-height:1.3}
+.logline{padding:2px 0;border-bottom:1px solid #1b2a55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title{text-align:center}
+.title small{font-size:9px;color:#b9c8ff;letter-spacing:1px}
+.title h1{margin:2px 0 0;font-size:clamp(15px,4.7vw,24px);line-height:1.1;white-space:nowrap;text-shadow:0 0 10px #000}
+.title h1 span{color:var(--gold)}
+.stage{position:relative;margin-top:8px}
+.arena{aspect-ratio:1;border:5px solid var(--cyan);border-radius:50%;position:relative;width:100%;margin:auto;background:radial-gradient(circle,#1a2250 0 14%,#0f1a3f 15% 100%);box-shadow:0 0 18px var(--cyan)}
 .rotatingStructure{position:absolute;inset:0;z-index:1;pointer-events:none;transform-origin:50% 50%;will-change:transform}
-.obstacle{position:absolute;width:18%;height:2%;min-height:7px;border-radius:99px;background:linear-gradient(90deg,#9478ff,#6b5bb5);left:var(--sx);top:var(--sy);transform:translate(-50%,-50%) rotate(var(--sa));pointer-events:none;opacity:.92}
-.core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:5px solid #ffc928;border-radius:50%;background:radial-gradient(circle,#22265e,#17164b);box-shadow:0 0 14px #ffcf36;pointer-events:none;z-index:2}
-.core:after{content:"⚔️";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(25px,5vw,44px)}
-.flag{z-index:3;position:absolute;left:0;top:0;will-change:transform;width:clamp(31px,5vw,54px);height:clamp(31px,5vw,54px);display:grid;place-items:center;border-radius:50%;background:#0b1746;border:3px solid #48dfff;font-size:clamp(20px,3vw,33px);transform:translate(-50%,-50%);user-select:none;-webkit-user-select:none}
-.flag.out{opacity:.14;filter:grayscale(1);border-color:#ff2c66}
-.flag.shielded{border-color:#00ffbd;box-shadow:0 0 14px #00ffbd}
-.flag.shielded:after{content:"🛡️";position:absolute;font-size:14px;right:-9px;top:-9px}
-.centerLabel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-align:center;text-shadow:0 0 10px red;font-weight:bold;pointer-events:none;z-index:2}
-.notice{border:2px solid var(--pink);border-radius:15px;padding:10px;margin-top:12px;text-align:center;box-shadow:0 0 12px #a500b8}
-.notice strong{color:#ff5de6;display:block;font-size:12px}
-.notice div{font-size:20px;font-weight:900;overflow-wrap:anywhere}
-.bottom{padding:10px 14px;max-width:1200px;margin:auto}
-.flagstrip{display:flex;gap:8px;overflow-x:auto;padding:10px;border:1px solid #147aff;border-radius:18px;background:#050b22}
-.mini{font-size:25px;flex:0 0 auto;opacity:.95}
-.mini.out{opacity:.2;filter:grayscale(1)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.controls input,.controls select,.controls button{min-width:0;padding:12px;border-radius:10px;border:1px solid #00bfff;background:#071331;color:#fff;font-size:16px}
+.obstacle{position:absolute;width:18%;height:2.2%;min-height:7px;border-radius:99px;background:linear-gradient(90deg,#9c86ff,#7366c8);left:var(--sx);top:var(--sy);transform:translate(-50%,-50%) rotate(var(--sa));pointer-events:none}
+.core{position:absolute;width:28%;height:28%;left:50%;top:50%;transform:translate(-50%,-50%);border:4px solid var(--gold);border-radius:50%;background:repeating-conic-gradient(#3b3680 0 22.5deg,#2c2866 22.5deg 45deg);box-shadow:0 0 12px #ffcf36;pointer-events:none;z-index:2}
+.flag{z-index:3;position:absolute;left:0;top:0;will-change:transform;width:8%;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:#fff1;border:2px solid #ffffffcc;font-size:1em;line-height:1;transform:translate(-50%,-50%);user-select:none;-webkit-user-select:none;overflow:hidden}
+.flag.out{opacity:.14;filter:grayscale(1)}
+.flag.shielded{border-color:#00ffbd;box-shadow:0 0 12px #00ffbd}
+.flag.shielded:after{content:"🛡️";position:absolute;font-size:10px;right:-2px;top:-2px}
+.banner{position:absolute;left:2%;bottom:3%;z-index:6;display:flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border:2px solid #ff4d6d;border-radius:8px;background:rgba(10,12,40,.95);opacity:0;transform:translateX(-20px);transition:opacity .2s,transform .2s;pointer-events:none}
+.banner.show{opacity:1;transform:none}
+.banner small{display:block;color:#ff4d6d;font-size:9px;font-weight:bold;letter-spacing:1px}
+#lastOut{font-size:clamp(15px,4.6vw,20px);font-weight:900}
+#status{text-align:center;font-weight:900;font-size:clamp(15px,4.4vw,19px);margin:10px 0 8px;overflow-wrap:anywhere;text-shadow:0 0 8px #000}
+.flagstrip{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;padding:2px 4px;font-size:clamp(11px,3.6vw,19px);text-align:center;line-height:1.25}
+.mini.out{opacity:.18;filter:grayscale(1)}
+.bar{position:relative;height:9px;margin:12px 4px 4px;border-radius:9px;background:#1b2350}
+.bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--cyan),var(--gold),#ff6a3d);transition:width .4s}
+.bar span{position:absolute;left:0;right:0;top:12px;text-align:center;font-size:9px;color:#b9c8ff;letter-spacing:1px}
+.admin{margin-top:30px;border:1px solid #1d3a7a;border-radius:10px;padding:6px 10px;background:rgba(5,10,30,.7)}
+.admin summary{cursor:pointer;font-size:12px;color:#9bb7ff}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.controls input,.controls select,.controls button{min-width:0;padding:11px;border-radius:10px;border:1px solid #00bfff;background:#071331;color:#fff;font-size:16px}
 .controls input{flex:1}
 .controls button{font-weight:bold;cursor:pointer}
 .controls button:active{transform:scale(.97)}
 .return{background:#075b43!important;border-color:#19ffab!important}
 .shield{background:#064e7c!important;border-color:#00dfff!important}
-#log{max-height:260px;overflow:auto;font-size:12px;line-height:1.5}
-.logline{padding:5px 0;border-bottom:1px solid #17264b}
-.hint{text-align:center;color:#a9caff;font-size:12px;padding:12px}
+.hint{text-align:center;color:#a9caff;font-size:11px;padding:10px}
 #winnerScreen{display:none;position:fixed;inset:0;z-index:9999;background:rgba(2,4,20,.96);align-items:center;justify-content:center;text-align:center;padding:20px}
 #winnerScreen.show{display:flex}
 .winnerBox{width:min(700px,100%);padding:30px 16px;border:3px solid #ffdc26;border-radius:24px;background:radial-gradient(circle,#25205e,#070b24);box-shadow:0 0 35px #ffdc26}
 #winnerTitle{font-size:clamp(30px,8vw,64px);color:#ffdc26;overflow-wrap:anywhere}
 #winnerFlag{font-size:clamp(55px,12vw,90px)}
 .winnerBox button{padding:14px 22px;border:0;border-radius:12px;background:#ffdc26;color:#101020;font-weight:bold;font-size:16px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.arena{max-width:520px}.layout .left{order:2}.layout .center{order:1}.layout .right{order:3}header{justify-content:center}.panel{padding:11px}}
-/* COMPACT SAVE YOUR COUNTRY MENU */
-.panel.right{position:absolute;top:-125px;right:12px;width:225px;max-width:48%;padding:8px;border:2px solid #35ffbd;border-radius:12px;background:rgba(5,13,43,.97);box-shadow:0 0 12px #00eaff;z-index:20}
-.panel.right h2{font-size:12px;line-height:1.2;margin:0 0 5px}
-.panel.right .cmd{padding:5px;margin:4px 0;font-size:10px;line-height:1.3;border-radius:6px}
-.panel.right .cmd b{font-size:11px;margin-bottom:2px}
-.panel.right h2[style]{margin-top:8px!important}
-.panel.right #log,.panel.right .hint{display:none}
-@media(max-width:850px){
-.panel.right{top:-110px;right:8px;width:145px;max-width:42%;padding:5px;z-index:10;border-radius:9px}
-.panel.right h2{font-size:9px;margin:0 0 4px}
-.panel.right .cmd{font-size:8px;line-height:1.2;padding:3px;margin:3px 0}
-.panel.right .cmd b{font-size:9px}
-}
 </style>
 </head>
 <body>
-<header>
-<div class="live">● LIVE ARENA</div>
-<div class="stat">COUNTRIES <span id="count">64</span></div>
-<div class="stat">REMAINING <span id="remaining">64</span></div>
-<div class="stat">SHIELDS <span id="shields">0</span></div>
-</header>
-<h1>WHERE ARE YOU <span>FROM?</span></h1>
-<div class="layout">
-<section class="panel left">
-<h2>⚡ AUTOMATIC ELIMINATION</h2>
-<div class="cmd"><b class="red">🎯 CENTER ZONE</b>One eligible country is eliminated automatically every 5 seconds.</div>
-<div class="cmd"><b class="green">🔄 RETURN / REVIVE</b>Use Return or Revive to bring an eliminated country back.</div>
-<div class="cmd"><b class="cyan">🛡️ SHIELD</b>Protect a country from elimination for 30 seconds.</div>
-<div class="notice"><strong>LAST ELIMINATED</strong><div id="lastOut">NONE YET</div></div>
+<div class="app">
+<div class="topbar">
+<div class="brand">FLAGS WAR<br><span>ARENA</span></div>
+<div class="box"><small>COUNTRIES</small><b id="count">64</b></div>
+<div class="box gold"><small>REMAINING</small><b id="remaining">64</b></div>
+<div class="ring" id="ring"><b id="countdown">5</b></div>
+</div>
+<div class="hud">
+<section class="side chat"><h3>CHAT SUPPORT <i>● LIVE</i></h3>
+<div id="log"><div class="logline">System: Arena ready.</div></div></section>
+<div class="title"><small>CYCLE <span id="cycle">1</span> • LIVE</small><h1>WHERE ARE<br><span>YOU FROM?</span></h1></div>
+<section class="side save"><h3>SAVE YOUR COUNTRY</h3>
+<div class="row"><span>💬 5 comments</span><span class="sh">🛡️ SHIELD</span></div>
+<div class="row"><span>💬 10 comments</span><span class="rv">🔄 REVIVE</span></div>
+<div class="row"><span>⏱ Shield lasts</span><span class="sh">30s</span></div>
 </section>
-<section class="center">
+</div>
+<div class="stage">
 <div class="arena" id="arena">
 <div class="rotatingStructure" id="rotatingStructure" aria-hidden="true">
 <div class="obstacle" style="--sx:42%;--sy:20%;--sa:78deg"></div>
@@ -96,9 +98,13 @@ h1 span{color:var(--gold)}
 <div class="obstacle" style="--sx:62%;--sy:85%;--sa:78deg"></div>
 </div>
 <div class="core"></div>
-<div class="centerLabel">ELIMINATION<br>ZONE</div>
 </div>
-<div class="notice"><strong>NEXT ACTION / STATUS</strong><div id="status">ARENA READY</div></div>
+<div class="banner" id="banner"><div><small>ELIMINATED</small><div id="lastOut">NONE YET</div></div></div>
+</div>
+<div id="status">ARENA READY</div>
+<div class="flagstrip" id="strip"></div>
+<div class="bar"><i id="elimBar"></i><span id="elimText">0 / 64 ELIMINATED</span></div>
+<details class="admin"><summary>⚙ Controls (Return / Shield / Command) · Shields active: <span id="shields">0</span></summary>
 <div class="controls">
 <select id="country" aria-label="Choose country for Return or Shield"></select>
 <button class="return" onclick="act('return')">🔄 Return</button>
@@ -109,20 +115,8 @@ h1 span{color:var(--gold)}
 <button onclick="runCommand()">RUN COMMAND</button>
 <button onclick="resetGame()">RESET</button>
 </div>
-<div class="notice"><strong>NEXT AUTOMATIC ELIMINATION</strong><div id="countdown">5s</div></div>
-</section>
-<section class="panel right">
-<h2>💬 SAVE YOUR COUNTRY</h2>
-<div class="cmd"><b class="cyan">🛡️ 5 COMMENTS — SHIELD</b>5 qualifying comments can activate a 30-second shield when live chat integration is connected.</div>
-<div class="cmd"><b class="green">🔄 10 COMMENTS — REVIVE</b>10 qualifying comments can revive an eliminated country when live chat integration is connected.</div>
-<h2 style="margin-top:16px">COMMAND LOG</h2>
-<div id="log"><div class="logline">System: Arena ready. Automatic elimination starts in 5 seconds.</div></div>
-<div class="hint">Demo mode: live YouTube chat is not connected.</div>
-</section>
-</div>
-<div class="bottom">
-<div class="flagstrip" id="strip"></div>
-<div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo only — not connected to real YouTube Live Chat</div>
+</details>
+<div class="hint">👍 LIKE IF YOU SEE YOUR COUNTRY FLAG · Demo mode: live YouTube chat is not connected</div>
 </div>
 <div id="winnerScreen" role="dialog" aria-modal="true">
 <div class="winnerBox">
@@ -158,7 +152,7 @@ const countryData=[
 ];
 const arena=document.getElementById("arena"),select=document.getElementById("country"),strip=document.getElementById("strip"),logBox=document.getElementById("log"),structure=document.getElementById("rotatingStructure");
 const $=id=>document.getElementById(id);
-let countries=[],gameOver=false,physicsReady=false,lastFrame=0,eliminationCountdown=5;
+let cycle=1,bannerTimer=null,countries=[],gameOver=false,physicsReady=false,lastFrame=0,eliminationCountdown=5;
 const BALL_MIN_SPEED=.85,BALL_MAX_SPEED=1.55,BALL_TARGET_SPEED=1.15,STICK_SPIN_RATE=Math.PI*2/18000;
 
 function log(m){
@@ -171,35 +165,63 @@ function log(m){
 
 /* ===== AUDIO (one shared context, no new contexts per sound) ===== */
 let audioCtx=null;
+let audioMaster=null,noiseBuf=null;
 function getAudio(){
   const A=window.AudioContext||window.webkitAudioContext;
   if(!A)return null;
-  if(!audioCtx)audioCtx=new A();
+  if(!audioCtx){
+    audioCtx=new A();
+    // loud + clear: master gain into a compressor so every effect is audible and never clips
+    audioMaster=audioCtx.createGain();audioMaster.gain.value=1.8;
+    const comp=audioCtx.createDynamicsCompressor();
+    comp.threshold.value=-18;comp.ratio.value=6;comp.attack.value=.003;comp.release.value=.15;
+    audioMaster.connect(comp);comp.connect(audioCtx.destination);
+  }
   if(audioCtx.state==="suspended")audioCtx.resume();
   return audioCtx;
 }
-function beep(freq=600){
-  try{
-    const ctx=getAudio();if(!ctx)return;
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.frequency.value=freq;g.gain.value=.05;
-    o.connect(g);g.connect(ctx.destination);
-    o.start();o.stop(ctx.currentTime+.12);
-  }catch(e){}
+function sfxOK(){const c=getAudio();return c&&c.state==="running"?c:null;}
+function tone(f,t0,d,type,v,f2){
+  const c=audioCtx,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t0);
+  if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+d);
+  g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+d);
+  o.connect(g);g.connect(audioMaster);o.start(t0);o.stop(t0+d+.03);
 }
+function noise(t0,d,v,f0,f1){
+  const c=audioCtx;
+  if(!noiseBuf){noiseBuf=c.createBuffer(1,c.sampleRate,c.sampleRate);const a=noiseBuf.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;}
+  const src=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain();
+  src.buffer=noiseBuf;src.loop=true;fl.type="bandpass";fl.Q.value=1.2;
+  fl.frequency.setValueAtTime(f0,t0);fl.frequency.exponentialRampToValueAtTime(f1,t0+d);
+  g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+d);
+  src.connect(fl);fl.connect(g);g.connect(audioMaster);src.start(t0);src.stop(t0+d+.03);
+}
+// elimination: deep boom + sharp crack + whoosh
 function playEliminationSound(){
-  try{
-    const ctx=getAudio();if(!ctx)return;
-    const now=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();
-    o.type="sawtooth";
-    o.frequency.setValueAtTime(150,now);
-    o.frequency.exponentialRampToValueAtTime(45,now+.3);
-    g.gain.setValueAtTime(.25,now);
-    g.gain.exponentialRampToValueAtTime(.001,now+.3);
-    o.connect(g);g.connect(ctx.destination);
-    o.start(now);o.stop(now+.3);
-  }catch(e){}
+  if(!sfxOK())return;const t=audioCtx.currentTime+.01;
+  tone(200,t,.5,"sine",1,36);
+  tone(1100,t,.14,"square",.28,180);
+  tone(110,t,.35,"sawtooth",.35,40);
+  noise(t,.4,.7,3500,300);
 }
+function sfxTick(){if(!sfxOK())return;tone(1500,audioCtx.currentTime+.01,.06,"square",.22,1100);}
+function sfxShield(){
+  if(!sfxOK())return;const t=audioCtx.currentTime+.01;
+  tone(988,t,.4,"sine",.6);tone(1319,t+.09,.5,"sine",.6);tone(1976,t+.18,.7,"triangle",.35);
+  noise(t,.5,.12,6000,9000);
+}
+function sfxRevive(){
+  if(!sfxOK())return;const t=audioCtx.currentTime+.01;
+  [523,659,784,1047,1319].forEach((f,i)=>{tone(f,t+i*.08,.35,"triangle",.5);tone(f*2,t+i*.08,.25,"sine",.18);});
+}
+function sfxWinner(){
+  if(!sfxOK())return;const t=audioCtx.currentTime+.01;
+  [[523,659,784],[587,740,880],[659,831,988]].forEach((ch,i)=>ch.forEach(f=>tone(f,t+i*.22,.35,"triangle",.4)));
+  [784,988,1175,1568].forEach(f=>{tone(f,t+.7,1.6,"triangle",.4);tone(f/2,t+.7,1.6,"sawtooth",.12);});
+  noise(t+.7,1.6,.25,2000,5000);
+}
+function beep(){}
 
 /* ===== ANNOUNCER (iOS-safe: warm-up, one pending, watchdog) ===== */
 const hasSpeech=("speechSynthesis" in window)&&!/[?&]voice=off/.test(location.search); // test: add ?voice=off to the URL
@@ -274,8 +296,8 @@ function playClips(country,type){
   if(type!=="winner"&&t-ctx.currentTime>6)return true; // too many queued, skip
   [nb,eb].forEach(b=>{
     const s=ctx.createBufferSource(),g=ctx.createGain();
-    s.buffer=b;g.gain.value=1;
-    s.connect(g);g.connect(ctx.destination);
+    s.buffer=b;g.gain.value=1.5;
+    s.connect(g);g.connect(audioMaster);
     s.start(t);
     t+=b.duration+.02;
   });
@@ -341,6 +363,9 @@ function update(){
   });
   $("remaining").textContent=remaining;
   $("shields").textContent=shields;
+  const el=countries.length-remaining;
+  $("elimBar").style.width=(el/countries.length*100)+"%";
+  $("elimText").textContent=el+" / "+countries.length+" ELIMINATED";
 }
 
 function showWinner(c){
@@ -351,7 +376,7 @@ function showWinner(c){
   $("winnerScreen").classList.add("show");
   $("status").textContent=c.name.toUpperCase()+" WINS!";
   log("🏆 "+c.name+" IS THE WINNER!");
-  beep(900);
+  sfxWinner();
   speakWinner(c);
 }
 
@@ -381,7 +406,7 @@ function act(action){
     c.vx=Math.cos(va)*BALL_TARGET_SPEED;c.vy=Math.sin(va)*BALL_TARGET_SPEED;
     $("status").textContent=c.name.toUpperCase()+" RETURNED";
     log("🔄 Returned "+c.name);
-    beep(750);
+    sfxRevive();
     announceEvent(c,"revived");
   }
   if(action==="shield"){
@@ -389,7 +414,7 @@ function act(action){
     c.shieldUntil=now+30000;
     $("status").textContent=c.name.toUpperCase()+" SHIELDED · 30s";
     log("🛡️ Shield activated for "+c.name+" (30 seconds)");
-    beep(900);
+    sfxShield();
     announceEvent(c,"shield");
   }
   update();
@@ -421,9 +446,9 @@ function resetGame(){
   $("winnerScreen").classList.remove("show");
   countries.forEach(c=>{c.out=false;c.shieldUntil=0;c.px=0;c.py=0;c.vx=0;c.vy=0;});
   eliminationCountdown=5;lastFrame=0;physicsReady=false;
-  $("lastOut").textContent="NONE YET";
+  $("lastOut").textContent="NONE YET";$("banner").classList.remove("show");
   $("status").textContent="ARENA RESET";
-  $("countdown").textContent="5s";
+  $("countdown").textContent="5";$("ring").style.setProperty("--p","360deg");cycle++;$("cycle").textContent=cycle;
   logBox.innerHTML="";
   log("Game reset. All flags returned.");
   update();
@@ -448,6 +473,7 @@ function automaticElimination(){
   if(!t)return;
   t.out=true;
   $("lastOut").textContent=t.flag+" "+t.name.toUpperCase();
+  $("banner").classList.add("show");clearTimeout(bannerTimer);bannerTimer=setTimeout(()=>$("banner").classList.remove("show"),2600);
   $("status").textContent=t.name.toUpperCase()+" ELIMINATED";
   log("⚡ Automatic elimination: "+t.name);
   playEliminationSound();
@@ -500,6 +526,7 @@ function animateArena(ts){
   const active=countries.filter(c=>!c.out);
 
   if(!physicsReady){
+    arena.style.fontSize=(arena.clientWidth*.05)+"px";
     active.forEach(c=>{
       const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*border*.78;
       c.px=cx+Math.cos(a)*r;c.py=cy+Math.sin(a)*r;
@@ -513,7 +540,7 @@ function animateArena(ts){
   const dt=Math.min(Math.max(rawDt,0),1.25);
   lastFrame=ts;
 
-  const radius=Math.max(12,Math.min(20,arena.clientWidth*.028));
+  const radius=arena.clientWidth*.04;
   const spin=ts*STICK_SPIN_RATE,cs=Math.cos(spin),sn=Math.sin(spin);
 
   // Visual sticks use the SAME clock as the physics sticks (no desync after a stall)
@@ -571,53 +598,75 @@ function animateArena(ts){
 window.addEventListener("resize",()=>{physicsReady=false;lastFrame=0;});
 document.addEventListener("visibilitychange",()=>{lastFrame=0;});
 
-/* ===== FIREBASE REMOTE CONNECTION ===== */
-const firebaseConfig={
-  apiKey:"AIzaSyD9KdftdGPf8ZErfBcqimAdXvp-rEd49Mw",
-  authDomain:"flags-war-arena-8609d.firebaseapp.com",
-  databaseURL:"https://flags-war-arena-8609d-default-rtdb.firebaseio.com",
-  projectId:"flags-war-arena-8609d",
-  storageBucket:"flags-war-arena-8609d.firebasestorage.app",
-  messagingSenderId:"419617146899",
-  appId:"1:419617146899:web:924e36cce4ec398ec517e6",
-  measurementId:"G-YLBGB5EVQH"
-};
-window.gameSessionStartedAt=Date.now();
+// ===== FIREBASE REMOTE CONNECTION =====
 
-function connectFirebaseRemote(){
-  if(typeof firebase==="undefined"){log("Firebase not loaded. Remote control off.");return;}
-  try{
-    firebase.initializeApp(firebaseConfig);
-    firebase.auth().signInAnonymously().then(()=>{
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD9KdftdGPf8ZErfBcqimAdXvp-rEd49Mw",
+  authDomain: "flags-war-arena-8609d.firebaseapp.com",
+  databaseURL: "https://flags-war-arena-8609d-default-rtdb.firebaseio.com",
+  projectId: "flags-war-arena-8609d",
+  storageBucket: "flags-war-arena-8609d.firebasestorage.app",
+  messagingSenderId: "419617146899",
+  appId: "1:419617146899:web:924e36cce4ec398ec517e6",
+  measurementId: "G-YLBGB5EVQH"
+};
+
+function connectFirebaseRemote() {
+  firebase.initializeApp(firebaseConfig);
+
+  firebase.auth().signInAnonymously()
+    .then(() => {
       log("Firebase connected. Remote control ready.");
-      firebase.database().ref("arenaCommands").on("child_added",snap=>{
-        const cmd=snap.val();
-        if(!cmd||!["return","shield"].includes(cmd.action)||typeof cmd.country!=="string"){snap.ref.remove();return;}
-        if(cmd.createdAt<window.gameSessionStartedAt){snap.ref.remove();return;}
-        const c=findCountry(cmd.country);
-        if(c&&!gameOver){
-          select.value=c.name;
-          act(cmd.action);
-          log("REMOTE: "+cmd.action.toUpperCase()+" "+c.name);
-        }
-        snap.ref.remove();
-      });
-    }).catch(e=>log("Firebase error: "+e.message));
-  }catch(e){log("Firebase error: "+e.message);}
+
+      firebase.database().ref("arenaCommands")
+        .on("child_added", snapshot => {
+
+          const command = snapshot.val();
+
+          if (!command ||
+              !["return", "shield"].includes(command.action) ||
+              typeof command.country !== "string") {
+            snapshot.ref.remove();
+            return;
+          }
+
+          if (command.createdAt < window.gameSessionStartedAt) {
+            snapshot.ref.remove();
+            return;
+          }
+
+          const country = findCountry(command.country);
+
+          if (country && !gameOver) {
+            select.value = country.name;
+            act(command.action);
+            log("REMOTE: " + command.action.toUpperCase() + " " + country.name);
+          }
+
+          snapshot.ref.remove();
+        });
+    })
+    .catch(error => log("Firebase error: " + error.message));
 }
+
+window.gameSessionStartedAt = Date.now();
+
+// ===== END FIREBASE CONNECTION =====
 
 /* ===== START (game starts first; Firebase never blocks it) ===== */
 makeCountries();
 requestAnimationFrame(animateArena);
 setTimeout(loadClips,1500);
-window.addEventListener("load",connectFirebaseRemote);
+window.addEventListener("load",()=>{try{connectFirebaseRemote();}catch(e){log("Firebase not loaded: "+e.message);}}); // call only; function above is your original
 
 setInterval(update,1000);
 setInterval(()=>{
   if(gameOver)return;
   eliminationCountdown--;
+  if(eliminationCountdown>0&&eliminationCountdown<=3)sfxTick();
   if(eliminationCountdown<=0){automaticElimination();eliminationCountdown=5;}
-  $("countdown").textContent=eliminationCountdown+"s";
+  $("countdown").textContent=eliminationCountdown;$("ring").style.setProperty("--p",(eliminationCountdown/5*360)+"deg");
 },1000);
 </script>
 </body>
